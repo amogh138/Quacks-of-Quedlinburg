@@ -10,9 +10,17 @@ public class IngredientSet {
     public void addIngredient(Ingredient i) {}
     public void addStartChip(Ingredient i) {}
     public static List<IngredientSet> getAll() {}
-    public String getName() {}
-    public String getDescription() {}
-    public List<Ingredient> getIngredients() {}
-    public List<Ingredient> getStartBag() {}
+    public String getName() {
+        return name;
+    }
+    public String getDescription() {
+        return description;
+    }
+    public List<Ingredient> getIngredients() {
+        return ingredients;
+    }
+    public List<Ingredient> getStartBag() {
+        return startBag;
+    }
     public String toString() {}
 }
