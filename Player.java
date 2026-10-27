@@ -18,7 +18,7 @@ public class Player {
     public Player(String name, AI ai, List<Ingredient> startBag) {}
     public Ingredient draw(Random rng) {}
     public boolean isExploded() {}
-    public void startRound()
+    public void startRound() {}
     public void endRound() {}
     public void undoLast() {}
     public void lowerBombs(int n) {}

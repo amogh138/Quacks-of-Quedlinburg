@@ -6,7 +6,11 @@ public class Ingredient {
     private int unlockRound;
     private String effect;
     public Ingredient(String name, String color, int value, int cost, int unlockRound, String effect) {}
-    public boolean isCherryBomb() {}
+    public boolean isCherryBomb() {
+        if(color.equals("white")) 
+            return true;
+        return false;
+    }
     public String getName() {
         return name;
     }
@@ -25,5 +29,7 @@ public class Ingredient {
     public String getEffect() {
         return effect;
     }
-    public String toString() {}
+    public String toString() {
+        return (color+" "+value);
+    }
 }
