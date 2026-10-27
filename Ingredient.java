@@ -5,7 +5,7 @@ public class Ingredient {
     private int cost;
     private int unlockRound;
     private String effect;
-    public Ingredient(String name, String color, int value, int cost, int unlockRound, String effect) {}
+    public Ingredient(String name, String color, int value, int cost, int unlockRound, String effect, BufferedImage image) {}
     public boolean isCherryBomb() {
         if(color.equals("white")) 
             return true;
