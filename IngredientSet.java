@@ -7,7 +7,9 @@ public class IngredientSet {
         this.name = name;
         this.description = description;
     }
-    public void addIngredient(Ingredient i) {}
+    public void addIngredient(Ingredient i) {
+        
+    }
     public void addStartChip(Ingredient i) {}
     public static List<IngredientSet> getAll() {}
     public String getName() {}
