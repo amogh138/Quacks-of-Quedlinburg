@@ -42,13 +42,29 @@ public class Player {
     public List<Ingredient> getBag() {}
     public List<Ingredient> getPot() {}
     public List<Ingredient> getBoughtThisRound() {}
-    public int getPosition() {}
-    public int getCherryBombTotal() {}
-    public int getCoins() {}
-    public int getPoints() {}
-    public int getRubies() {}
-    public int getRatTails() {}
-    public boolean isFlaskFilled() {}
-    public boolean isStopped() {}
+    public int getPosition() {
+        return this.position;
+    }
+    public int getCherryBombTotal() {
+        return this.cherryBombTotal;
+    }
+    public int getCoins() {
+        return this.coins;
+    }
+    public int getPoints() {
+        return this.points;
+    }
+    public int getRubies() {
+        return this.rubies;
+    }
+    public int getRatTails() {
+        return this.ratTails;
+    }
+    public boolean isFlaskFilled() {
+        return this.flaskFilled;
+    }
+    public boolean isStopped() {
+        return this.stopped;
+    }
     public boolean isTakeCoins() {}
 }
