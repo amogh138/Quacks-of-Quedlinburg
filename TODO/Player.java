@@ -15,10 +15,25 @@ public class Player {
     private boolean flaskFilled;
     private boolean stopped;
     private boolean takeCoins;
-    public Player(String name, AI ai, List<Ingredient> startBag) {}
+    public Player(String name, AI ai, List<Ingredient> startBag) {
+        this.ai = ai;
+        this.name = name;
+        bag = startBag;
+    }
     public Ingredient draw(Random rng) {}
-    public boolean isExploded() {}
-    public void startRound() {}
+    public boolean isExploded() {
+        if(cherryBombTotal > LIMIT) {
+            return true;
+        }
+        return false;
+    }
+    private void startRound(List<Ingredient> startBag) {
+        bag = startBag;
+        boughtThisRound = new ArrayList<>();
+        position = 0;
+        cherryBombTotal = 0;
+        stopped = true;
+    }
     public void endRound() {}
     public void undoLast() {}
     public void lowerBombs(int n) {}
