@@ -34,7 +34,12 @@ public class Player {
         cherryBombTotal = 0;
         stopped = true;
     }
-    public void endRound() {}
+    public void endRound() {
+        for(Ingredient i : bag) {
+            pot.add(i);
+        }
+        bag = new ArrayList<>();
+    }
     public void undoLast() {}
     public void lowerBombs(int n) {}
     public void addToBag(Ingredient i) {}
