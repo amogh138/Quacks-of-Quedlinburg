@@ -40,13 +40,26 @@ public class Player {
         }
         bag = new ArrayList<>();
     }
-    public void undoLast() {}
-    public void lowerBombs(int n) {}
-    public void addToBag(Ingredient i) {}
-    public void addCoins(int n) {}
-    public void spendCoins(int n) {}
-    public void addPoints(int n) {}
-    public void addRubies(int n) {}
+//for now commented public void undoLast() {        
+//}
+    public void lowerBombs(int n) {
+        cherryBombTotal-=n;
+    }
+    public void addToBag(Ingredient i) {
+        bag.add(i);
+    }
+    public void addCoins(int n) {
+        coins+=n;
+    }
+    public void spendCoins(int n) {
+        coins-=n;
+    }
+    public void addPoints(int n) {
+        points+=n;
+    }
+    public void addRubies(int n) {
+        rubies+=n;
+    }
     public void spendRubies(int n) {}
     public void moveDrop(int n) {}
     public void move(int n) {}
