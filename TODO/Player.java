@@ -19,6 +19,7 @@ public class Player {
         this.ai = ai;
         this.name = name;
         bag = startBag;
+        position = startPosition;
     }
     public Ingredient draw(Random rng) {}
     public boolean isExploded() {
@@ -60,8 +61,12 @@ public class Player {
     public void addRubies(int n) {
         rubies+=n;
     }
-    public void spendRubies(int n) {}
-    public void moveDrop(int n) {}
+    public void spendRubies(int n) {
+        rubies-=n;
+    }
+    public void moveDrop(int n) {
+        position+=n;
+    }
     public void move(int n) {}
     public void setRatTails(int n) {}
     public void fillFlask() {}
