@@ -71,17 +71,35 @@ public class Player {
     public void setRatTails(int n) {
         ratTails = n;
     }
-    public void fillFlask() {}
-    public void useFlask() {}
-    public void stop() {}
-    public void resume() {}
-    public void setTakeCoins(boolean takeCoins) {}
-    public String getName() {}
+    public void fillFlask() {
+        flaskFilled = true;
+    }
+    public void useFlask() {
+        flaskFilled = false;
+    }
+    public void stop() {
+        stopped = true; 
+    }
+    public void resume() {
+        stopped = false;
+    }
+    public void setTakeCoins(boolean takeCoins) {
+        this.takeCoins = takeCoins;
+    }
+    public String getName() {
+        return name;
+    }
     public AI getAI() {}
     public boolean isAI() {}
-    public List<Ingredient> getBag() {}
-    public List<Ingredient> getPot() {}
-    public List<Ingredient> getBoughtThisRound() {}
+    public List<Ingredient> getBag() {
+        return bag;
+    }
+    public List<Ingredient> getPot() {
+        return pot;
+    }
+    public List<Ingredient> getBoughtThisRound() {
+        return boughtThisRound;
+    }
     public int getPosition() {
         return this.position;
     }
@@ -106,5 +124,7 @@ public class Player {
     public boolean isStopped() {
         return this.stopped;
     }
-    public boolean isTakeCoins() {}
+    public boolean isTakeCoins() {
+
+    }
 }
