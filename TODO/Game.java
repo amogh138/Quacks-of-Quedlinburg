@@ -1,3 +1,5 @@
+import java.util.*;
+import static java.lang.System.*;
 public class Game {
     private final int MAX_ROUNDS;
     private int playerCount;
@@ -5,7 +7,7 @@ public class Game {
     private IngredientSet set;
     private List<Player> players;
     private List<Ingredient> shop;
-    private List<Card> cards;
+    private ArrayList<Card> cards;
     private Board board;
     private Card currentCard;
     private Random rng;
@@ -18,11 +20,14 @@ public class Game {
     private boolean[] decided;
     private List<String> messages;
     public Game(int playerCount, int humanCount, IngredientSet set) {
+        cards = new ArrayList<Card>();
+        //add all fortune cards into cards
         this.playerCount = playerCount;
         this.humanCount = humanCount;
         MAX_ROUNDS = 9;
         this.set = set;
-        
+        currentCard = cards.get(rng.nextInt(24) + 1);
+        cards.remove(currentCard);
     }
     private void makeCards() {}
     public void startGame() {}

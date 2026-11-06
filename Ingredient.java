@@ -1,3 +1,4 @@
+import java.awt.image.BufferedImage;
 public class Ingredient {
     private String name;
     private String color;

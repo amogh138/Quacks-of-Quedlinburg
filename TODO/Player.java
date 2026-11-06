@@ -66,7 +66,9 @@ public class Player {
     public void moveDrop(int n) {
         position+=n;
     }
-    public void move(int n) {}
+    public void move(int n) {
+        
+    }
     public void setRatTails(int n) {
         ratTails = n;
     }

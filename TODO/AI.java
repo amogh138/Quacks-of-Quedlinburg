@@ -1,3 +1,4 @@
+import java.lang.*;
 public class AI {
     private double risk;
     private Random rng;
