@@ -125,6 +125,6 @@ public class Player {
         return this.stopped;
     }
     public boolean isTakeCoins() {
-
+        return takeCoins;
     }
 }
