@@ -17,7 +17,13 @@ public class Game {
     private boolean gameOver;
     private boolean[] decided;
     private List<String> messages;
-    public Game(int playerCount, int humanCount, IngredientSet set) {}
+    public Game(int playerCount, int humanCount, IngredientSet set) {
+        this.playerCount = playerCount;
+        this.humanCount = humanCount;
+        MAX_ROUNDS = 9;
+        this.set = set;
+        
+    }
     private void makeCards() {}
     public void startGame() {}
     private void startRound() {}
