@@ -41,8 +41,7 @@ public class Player {
         }
         bag = new ArrayList<>();
     }
-//for now commented public void undoLast() {        
-//}
+    public void undoLast() {}
     public void lowerBombs(int n) {
         cherryBombTotal-=n;
     }
@@ -67,7 +66,7 @@ public class Player {
     public void moveDrop(int n) {
         position+=n;
     }
-// commented for now public void move(int n) {}
+    public void move(int n) {}
     public void setRatTails(int n) {
         ratTails = n;
     }

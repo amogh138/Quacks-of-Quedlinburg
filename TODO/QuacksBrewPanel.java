@@ -1,9 +1,15 @@
-public class QuacksBrewPanel {
+import java.awt.*;
+import java.awt.image.*;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+public class QuacksBrewPanel extends JPanel {
     private Game game;
     private int selected;
     private boolean showMenu;
     private Color[] colors;
-    public QuacksPanel() {}
+    public QuacksPanel() {
+
+    }
     public void paint(Graphics g) {}
     private void drawMenu(Graphics2D g) {}
     private void drawHeader(Graphics2D g) {}
