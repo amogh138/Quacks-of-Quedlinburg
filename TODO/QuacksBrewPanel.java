@@ -12,7 +12,7 @@ public class QuacksBrewPanel extends JPanel implements MouseListener {
     private boolean showMenu;
     private Color[] colors;
     private BufferedImage selectSet, numPlayers;
-    public QuacksPanel() {
+    public QuacksBrewPanel() {
         try {
             selectSet = ImageIO.read(QuacksBrewPanel.class.getResource("/Image/Sets.png"));
             numPlayers = ImageIO.read(QuacksBrewPanel.class.getResource("/Image/"));
@@ -27,7 +27,9 @@ public class QuacksBrewPanel extends JPanel implements MouseListener {
         g.drawImage(selectSet, 0, getHeight(), 0, getWidth(), null);
     }
     private void drawSelectNumPlayers(Graphics2D g) {}
-    private void drawHeader(Graphics2D g) {}
+    private void drawHeader(Graphics2D g) {
+        g.fillRect(0, 0, getWidth(), 40);
+    }
     private void drawBoard(Graphics2D g) {}
     private void drawCard(Graphics2D g) {}
     private void drawScoreboard(Graphics2D g) {}
@@ -38,4 +40,10 @@ public class QuacksBrewPanel extends JPanel implements MouseListener {
     private Color getColor(String name) {}
     private void handleKey(int keyCode) {}
     private void moveSelection(int amount) {}
+
+    public void mouseClicked(MouseEvent e) {}
+    public void mouseExited(MouseEvent e) {}
+    public void mousePressed(MouseEvent e) {}
+    public void mouseEntered(MouseEvent e) {}
+    public void mouseReleased(MouseEvent e) {}
 }

@@ -1,3 +1,4 @@
+import java.util.*;
 public class Player {
     private final int LIMIT;
     private String name;
@@ -16,6 +17,7 @@ public class Player {
     private boolean stopped;
     private boolean takeCoins;
     public Player(String name, AI ai, List<Ingredient> startBag) {
+        this.LIMIT = 0;
         this.ai = ai;
         this.name = name;
         bag = startBag;

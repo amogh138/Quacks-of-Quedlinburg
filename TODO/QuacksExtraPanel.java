@@ -1,9 +1,18 @@
+// import java.awt.*;
+// import java.awt.image.*;
+// import java.awt.imageio.ImageIO;
+// import java.io.*;
+// import java.awt.event.MouseEvent;
+// import java.awt.event.MouseListener;
+// import javax.swing.*;
+// import java.awt.event.KeyEvent;
+// import java.awt.event.KeyListener;
+
 import java.awt.*;
 import java.awt.image.*;
-import java.awt.imageio.ImageIO;
 import java.io.*;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -85,4 +94,44 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
             }
         }
     }
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'keyPressed'");
+	}
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'keyReleased'");
+	}
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'keyTyped'");
+	}
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'mouseClicked'");
+	}
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'mouseEntered'");
+	}
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'mouseExited'");
+	}
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'mousePressed'");
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'mouseReleased'");
+	}
 }

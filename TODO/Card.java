@@ -1,3 +1,4 @@
+import java.awt.image.*;
 public class Card {
     private int cardNum;
     private BufferedImage cardImage;
