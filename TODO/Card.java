@@ -14,4 +14,8 @@ public class Card {
                 System.out.println("Make this");
         }
     }
+
+    public BufferedImage getImage() {
+        return cardImage;
+    }
 }

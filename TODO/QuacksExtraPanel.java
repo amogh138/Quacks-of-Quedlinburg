@@ -1,38 +1,58 @@
-// import java.awt.*;
-// import java.awt.image.*;
-// import java.awt.imageio.ImageIO;
-// import java.io.*;
-// import java.awt.event.MouseEvent;
-// import java.awt.event.MouseListener;
-// import javax.swing.*;
-// import java.awt.event.KeyEvent;
-// import java.awt.event.KeyListener;
-
 import java.awt.*;
 import java.awt.image.*;
+import javax.imageio.ImageIO;
 import java.io.*;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListener{
-    private BufferedImage c;
-    public void paint(Graphics g)
+public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListener
+{
+	private BufferedImage selectSet, menu, rPg1, rPg2, rPg3, rPg4, rPg5, rPg6, rPg7, rPg8;
+	private String choice = "menu";
+    public QuacksExtraPanel()
+	{
+		try
+		{
+        	selectSet = ImageIO.read(QuacksExtraPanel.class.getResource("SetSelect.png"));
+            menu = ImageIO.read(QuacksExtraPanel.class.getResource("menu.png"));
+            rPg1 = ImageIO.read(QuacksExtraPanel.class.getResource("RulesPg1.png"));
+            rPg2 = ImageIO.read(QuacksExtraPanel.class.getResource("RulesPg2.png"));
+            rPg3 = ImageIO.read(QuacksExtraPanel.class.getResource("RulesPg3.png"));
+            rPg4 = ImageIO.read(QuacksExtraPanel.class.getResource("RulesPg4.png"));
+            rPg5 = ImageIO.read(QuacksExtraPanel.class.getResource("RulesPg5.png"));
+            rPg6 = ImageIO.read(QuacksExtraPanel.class.getResource("RulesPg6.png"));
+            rPg7 = ImageIO.read(QuacksExtraPanel.class.getResource("RulesPg7.png"));
+            rPg8 = ImageIO.read(QuacksExtraPanel.class.getResource("RulesPg8.png"));
+
+		} catch(Exception E)
+		{
+			System.out.println("Exception Error");
+            return;
+        }
+        addKeyListener(this);
+        addMouseListener(this);
+	}
+	
+	private BufferedImage c;
+    private void drawScoreChart(Graphics g) {}
+    private void drawSets(Graphics g) 
     {
         
     }
     private void drawMainMenu(Graphics g) 
     {
-        super.paint(g);
-        try
+       super.paint(g);
+        switch(choice)
         {
-            //c = 
-        }
-        catch(Exception E)
-        {
+            case "menu":
+                g.drawImage(menu, 0, 0, null);
+                break;
 
+            default:
+                g.drawImage(menu, 0, 0, null);
         }
     }
     private void drawHowToPlay(Graphics g)
@@ -40,42 +60,40 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
         super.paint(g);
         switch(choice)
         {
-            switch (choice)
-            {
             case "rPg1":
                 g.drawImage(rPg1, 0, 0, null);
                 break;
 
-                case "rPg2":
+            case "rPg2":
                 g.drawImage(rPg2, 0, 0, null);
                 break;
 
-                case "rPg3":
+            case "rPg3":
                 g.drawImage(rPg3, 0, 0, null);
                 break;
 
-                case "rPg4":
+            case "rPg4":
                 g.drawImage(rPg4, 0, 0, null);
                 break;
 
-                case "rPg5":
+            case "rPg5":
                 g.drawImage(rPg5, 0, 0, null);
                 break;
 
-                case "rPg6":
+            case "rPg6":
                 g.drawImage(rPg6, 0, 0, null);
                 break;
 
-                case "rPg7":
+            case "rPg7":
                 g.drawImage(rPg7, 0, 0, null);
                 break;
 
-                case "rPg8":
+            case "rPg8":
                 g.drawImage(rPg8, 0, 0, null);
                 break;
+
             default:
                 g.drawImage(menu, 0, 0, null);
-            }
         }
     }
     private void drawPlayerNumSelect(Graphics g) {}
@@ -84,54 +102,27 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
         super.paint(g);
         switch(choice)
         {
-            switch (choice) 
-            {
             case "setSelect":
                 g.drawImage(selectSet, 0, 0, null);
                 break;
             default:
                 g.drawImage(menu, 0, 0, null);
-            }
         }
     }
-	@Override
-	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'keyPressed'");
-	}
-	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'keyReleased'");
-	}
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'keyTyped'");
-	}
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'mouseClicked'");
-	}
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'mouseEntered'");
-	}
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'mouseExited'");
-	}
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'mousePressed'");
-	}
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'mouseReleased'");
-	}
+
+	public void keyPressed(KeyEvent e) {}
+
+	public void keyReleased(KeyEvent e) {}
+
+	public void keyTyped(KeyEvent e) {}
+
+	public void mouseClicked(MouseEvent e) {}
+
+	public void mouseEntered(MouseEvent e) {}
+
+	public void mouseExited(MouseEvent e) {}
+
+	public void mousePressed(MouseEvent e) {}
+
+	public void mouseReleased(MouseEvent e) {}
 }

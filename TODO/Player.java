@@ -16,15 +16,26 @@ public class Player {
     private boolean flaskFilled;
     private boolean stopped;
     private boolean takeCoins;
-    public Player(String name, AI ai, List<Ingredient> startBag) {
+    public Player(String name, AI ai, ArrayList<Ingredient> startBag) {
         this.LIMIT = 0;
         this.ai = ai;
         this.name = name;
         bag = startBag;
         position = startPosition;
+        pot = new ArrayList<>();
+        boughtThisRound = new ArrayList<>();
+        cherryBombTotal = 0;
+        coins = 0;
+        points = 0;
+        rubies = 0;
+        ratTails = 0;
+        flaskFilled = false;
+        stopped = true;
     }
     public Ingredient draw(Random rng) {
-        return pot.add((int)Math.random()*bag.size);
+        int r = (int) Math.random();
+        pot.add(bag.get(r));
+        return bag.get(r);
     }
     public boolean isExploded() {
         if(cherryBombTotal > LIMIT) {
@@ -46,7 +57,7 @@ public class Player {
         bag = new ArrayList<>();
     }
     public void undoLast() {
-        pot
+        pot.removeLast();
     }
     public void lowerBombs(int n) {
         cherryBombTotal-=n;
@@ -97,7 +108,7 @@ public class Player {
         return name;
     }
     public AI getAI() {}
-    public boolean isAI() {}
+    public boolean isAI() {  }
     public List<Ingredient> getBag() {
         return bag;
     }

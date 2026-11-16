@@ -21,14 +21,25 @@ public class QuacksBrewPanel extends JPanel implements MouseListener {
         }
     }
     public void paint(Graphics g) {
-        
+        super.paint(g);
     }
     private void drawSelectSet(Graphics2D g) {
         g.drawImage(selectSet, 0, getHeight(), 0, getWidth(), null);
     }
     private void drawSelectNumPlayers(Graphics2D g) {}
     private void drawHeader(Graphics2D g) {
+        String phase;
+        if(game.isBrewing())
+            phase = "Brewing";
+        if(game.isBuying())
+            phase = "Buying";
+        else
+            phase = "Game Over";
+        g.setColor(Color.GRAY);
         g.fillRect(0, 0, getWidth(), 40);
+        g.setColor(Color.BLACK);
+        g.drawString("Round :" + game.getRound() + "\tPhase: " + phase + "\tDice Result: " + game.getDiceResult(), 20, 20);
+
     }
     private void drawBoard(Graphics2D g) {}
     private void drawCard(Graphics2D g) {}
