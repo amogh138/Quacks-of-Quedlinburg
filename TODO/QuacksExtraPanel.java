@@ -40,34 +40,80 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
     private void drawScoreChart(Graphics g) {}
     private void drawSets(Graphics g) 
     {
-        super.paint(g);
-        switch(choice)
-        {
-            switch (choice) {
-            case "menu":
-                g.drawImage(menu, 0, 0, null);
-                break;
-            case "setSelect":
-                g.drawImage(selectSet, 0, 0, null);
-                break;
-            default:
-                g.drawImage(menu, 0, 0, null);
-        }
+        
     }
     private void drawMainMenu(Graphics g) 
     {
        super.paint(g);
         switch(choice)
         {
-            switch (choice) {
+            switch (choice)
+            {
             case "menu":
                 g.drawImage(menu, 0, 0, null);
                 break;
             default:
                 g.drawImage(menu, 0, 0, null);
+            }
         }
     }
-    private void drawHowToPlay(Graphics g) {}
+    private void drawHowToPlay(Graphics g)
+    {
+        super.paint(g);
+        switch(choice)
+        {
+            switch (choice)
+            {
+            case "rPg1":
+                g.drawImage(rPg1, 0, 0, null);
+                break;
+
+                case "rPg2":
+                g.drawImage(rPg2, 0, 0, null);
+                break;
+
+                case "rPg3":
+                g.drawImage(rPg3, 0, 0, null);
+                break;
+
+                case "rPg4":
+                g.drawImage(rPg4, 0, 0, null);
+                break;
+
+                case "rPg5":
+                g.drawImage(rPg5, 0, 0, null);
+                break;
+
+                case "rPg6":
+                g.drawImage(rPg6, 0, 0, null);
+                break;
+
+                case "rPg7":
+                g.drawImage(rPg7, 0, 0, null);
+                break;
+
+                case "rPg8":
+                g.drawImage(rPg8, 0, 0, null);
+                break;
+            default:
+                g.drawImage(menu, 0, 0, null);
+            }
+        }
+    }
     private void drawPlayerNumSelect(Graphics g) {}
-    private void drawSetSelect(Graphics g) {}
+    private void drawSetSelect(Graphics g)
+    {
+        super.paint(g);
+        switch(choice)
+        {
+            switch (choice) 
+            {
+            case "setSelect":
+                g.drawImage(selectSet, 0, 0, null);
+                break;
+            default:
+                g.drawImage(menu, 0, 0, null);
+            }
+        }
+    }
 }
