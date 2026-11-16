@@ -22,5 +22,7 @@ public class IngredientSet {
     public List<Ingredient> getStartBag() {
         return startBag;
     }
-    public String toString() {}
+    public String toString() {
+        return("the set is "+name);
+    }
 }

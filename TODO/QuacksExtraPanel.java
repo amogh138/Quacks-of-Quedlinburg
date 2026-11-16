@@ -10,6 +10,20 @@ import java.awt.event.KeyListener;
 
 public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListener{
     private BufferedImage c;
+    private BufferedImage menu, setSelect;
+    public void QuackExtraPanel()
+    {
+        try
+        {
+            menu = ImageIO.read(new File("MainMenu.png"));
+            setSelect = ImageIO.read(new File("SetSelect.png"));
+        }
+        catch(Exception E)
+        {
+            System.out.println("Exception Error");
+            return;
+        }
+    }
     public void paint(Graphics g)
     {
         super.paint(g);
@@ -20,14 +34,7 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
     private void drawMainMenu(Graphics g) 
     {
         super.paint(g);
-        try
-        {
-            //c = 
-        }
-        catch(Exception E)
-        {
-
-        }
+        
     }
     private void drawHowToPlay(Graphics g) {}
     private void drawPlayerNumSelect(Graphics g) {}

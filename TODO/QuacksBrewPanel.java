@@ -14,13 +14,18 @@ public class QuacksBrewPanel extends JPanel implements MouseListener {
     private BufferedImage selectSet, numPlayers;
     public QuacksPanel() {
         try {
-            selectSet = ImageIO.read(QuacksBrewPanel.class.getResource(""));
+            selectSet = ImageIO.read(QuacksBrewPanel.class.getResource("/Image/Sets.png"));
+            numPlayers = ImageIO.read(QuacksBrewPanel.class.getResource("/Image/"));
         } catch(Exception E) {
 
         }
     }
-    public void paint(Graphics g) {}
-    private void drawSelectSet(Graphics2D g) {}
+    public void paint(Graphics g) {
+        
+    }
+    private void drawSelectSet(Graphics2D g) {
+        g.drawImage(selectSet, 0, getHeight(), 0, getWidth(), null);
+    }
     private void drawSelectNumPlayers(Graphics2D g) {}
     private void drawHeader(Graphics2D g) {}
     private void drawBoard(Graphics2D g) {}

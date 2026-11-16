@@ -21,7 +21,9 @@ public class Player {
         bag = startBag;
         position = startPosition;
     }
-    public Ingredient draw(Random rng) {}
+    public Ingredient draw(Random rng) {
+        return pot.add((int)Math.random()*bag.size);
+    }
     public boolean isExploded() {
         if(cherryBombTotal > LIMIT) {
             return true;
@@ -41,7 +43,9 @@ public class Player {
         }
         bag = new ArrayList<>();
     }
-    public void undoLast() {}
+    public void undoLast() {
+        pot
+    }
     public void lowerBombs(int n) {
         cherryBombTotal-=n;
     }
@@ -64,16 +68,16 @@ public class Player {
         rubies-=n;
     }
     public void moveDrop(int n) {
-        position+=n;
+        startPosition+=n;
     }
     public void move(int n) {
-        
+        position+=n;
     }
     public void setRatTails(int n) {
         ratTails = n;
     }
     public void fillFlask() {
-        flaskFilled = true;
+        this.flaskFilled = true;
     }
     public void useFlask() {
         flaskFilled = false;
