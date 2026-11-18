@@ -98,6 +98,10 @@ public class Game {
             }
         }
     }
+
+    public int getNumPlayers() {
+        return players.size();
+    }
     private void endRound() {
         if (round == MAX_ROUNDS) {
             gameOver = true;

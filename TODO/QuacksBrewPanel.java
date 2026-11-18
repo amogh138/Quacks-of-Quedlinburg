@@ -10,7 +10,7 @@ public class QuacksBrewPanel extends JPanel implements MouseListener {
     private Game game;
     private int selected;
     private boolean showMenu;
-    private BufferedImage menu, board, pot, shop, selectSet, numPlayers;
+    private BufferedImage menu, board, redPot, bluePot, greenPot, yellowPot, shop, selectSet, numPlayers;
     private Color[] colors;
 
     public QuacksBrewPanel() {
@@ -32,7 +32,7 @@ public class QuacksBrewPanel extends JPanel implements MouseListener {
         g.drawImage(selectSet, 0, getHeight(), 0, getWidth(), null);
     }
     private void drawSelectNumPlayers(Graphics g) {}
-    private void drawHeader(Graphics2D g) {
+    private void drawHeader(Graphics g) {
         String phase;
         if(game.isBrewing())
             phase = "Brewing";
@@ -51,7 +51,11 @@ public class QuacksBrewPanel extends JPanel implements MouseListener {
     private void drawCard(Graphics g) {
         g.drawImage(game.getCurrentCard().getImage(), 0, 0, 50, 50, null);
     }
-    private void drawPot(Graphics g, String color) {}
+    private void drawPot(Graphics g, String color) {
+        if(color.equals("red")) {
+            
+        }
+    }
     private void drawShop(Graphics g) {}
     private void drawMessage(Graphics g) {}
     private void drawGameOver(Graphics g) {}

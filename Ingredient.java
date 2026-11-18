@@ -6,7 +6,16 @@ public class Ingredient {
     private int cost;
     private int unlockRound;
     private String effect;
-    public Ingredient(String name, String color, int value, int cost, int unlockRound, String effect, BufferedImage image) {}
+    private BufferedImage image;
+    public Ingredient(String name, String color, int value, int cost, int unlockRound, String effect, BufferedImage image) {
+        this.name = name;
+        this.color = color;
+        this.value = value;
+        this.cost = cost;
+        this.unlockRound = unlockRound;
+        this.effect = effect;
+        this.image = image;
+    }
     public boolean isCherryBomb() {
         if(color.equals("white")) 
             return true;
@@ -29,6 +38,30 @@ public class Ingredient {
     }
     public String getEffect() {
         return effect;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setColor(String color) {
+        this.color = color;
+    }
+    public void setValue(int value) {
+        this.value = value;
+    }
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
+    public void setUnlockRound(int unlockRound) {   
+        this.unlockRound = unlockRound;
+    }  
+    public void setEffect(String effect) {
+        this.effect = effect;
+    }
+    public void setImage(BufferedImage image) {
+        this.image = image;
+    }
+    public BufferedImage getImage() {
+        return image;
     }
     public String toString() {
         return (color+" "+value);
