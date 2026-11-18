@@ -1,3 +1,15 @@
+<<<<<<< HEAD
+public class QuacksExtraPanel extends JPanel {
+    public void paint(Graphics g) {}
+    private void draw scoreChart(Graphics2D g) {}
+    private void drawSets(Graphics2D g) {}
+    private void drawMainMenu(Graphics2D g) {
+        g.draw
+    }
+    private void drawHowToPlay(Graphics2D g) {}
+    private void drawPlayerNumSelect(Graphics2D g) {}
+    private void drawSetSelect(Graphics2D g) {}
+=======
 import java.awt.*;
 import java.awt.image.*;
 import javax.imageio.ImageIO;
@@ -137,4 +149,5 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
 	public void mousePressed(MouseEvent e) {}
 
 	public void mouseReleased(MouseEvent e) {}
+>>>>>>> 3f97afe15f6fb098a1582d711dd69a1d6efc152c
 }
