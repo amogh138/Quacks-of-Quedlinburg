@@ -29,8 +29,13 @@ public class Game {
         currentCard = cards.get(rng.nextInt(24) + 1);
         cards.remove(currentCard);
     }
-    private void makeCards() {}
-    public void startGame() {}
+    private void makeCards() {
+        for (int i = 1; i <= 24; i++) {
+            cards.add(new Card());
+        }
+    }
+    public void startGame() {
+    }
     private void startRound() {}
     private void giveRatTails() {}
     public void drawAll() {}
@@ -39,7 +44,14 @@ public class Game {
     public void stopPlayer(int index) {}
     public void useFlask(int index) {}
     private void flask(Player p) {}
-    private boolean everyoneStopped() {}
+    private boolean everyoneStopped() {
+        for (boolean b : decided) {
+            if (!b) {
+                return false;
+            }
+        }
+        return true;
+    }
     private void endBrewing() {}
     private void nextChoice() {}
     public void choose(boolean takeCoins) {}
@@ -52,24 +64,94 @@ public class Game {
     private void buy(Player p, Ingredient i) {}
     public void buyDrop() {}
     public void buyFlask() {}
-    public void doneBuying() {}
-    private void nextBuyer() {}
-    private void aiBuy(Player p) {}
-    private void endRound() {}
-    public Player winner() {}
-    public void addMessage(String text) {}
-    public Player getCurrentPlayer() {}
-    public List<Player> getPlayers() {}
-    public IngredientSet getSet() {}
-    public List<Ingredient> getShop() {}
-    public Board getBoard() {}
-    public Card getCurrentCard() {}
-    public int getRound() {}
-    public int getCurrent() {}
-    public int getDiceResult() {}
-    public List<String> getMessages() {}
-    public boolean isBrewing() {}
-    public boolean isChoosing() {}
-    public boolean isBuying() {}
-    public boolean isGameOver() {}
+    public void doneBuying() {
+        buying = false;
+        nextBuyer();
+    }
+    private void nextBuyer() {
+        current = (current + 1) % playerCount;
+    }
+    private void aiBuy(Player p) {
+        if (p.getAI().takeCoins(p, board, round)) {
+            p.setTakeCoins(true);
+            addMessage(p.getName() + " took coins.");
+        } else {
+            Ingredient i = p.getAI().chooseBuy(p, shop);
+            if (i != null) {
+                buy(p, i);
+                addMessage(p.getName() + " bought " + i.getName() + ".");
+            } else if (p.getAI().wantFlask(p)) {
+                buyFlask();
+                addMessage(p.getName() + " bought a flask.");
+            } else if (p.getAI().wantDrop(p)) {
+                buyDrop();
+                addMessage(p.getName() + " bought a drop.");
+            } else {
+                doneBuying();
+                addMessage(p.getName() + " is done buying.");
+            }
+        }
+    }
+    private void endRound() {
+        if (round == MAX_ROUNDS) {
+            gameOver = true;
+        } else {
+            round++;
+            startRound();
+        }
+    }
+    public Player winner() {
+        Player winner = players.get(0);
+        for (Player p : players) {
+            if (p.getPoints() > winner.getPoints()) {
+                winner = p;
+            }
+        }
+        return winner;
+    }
+    public void addMessage(String text) {
+        messages.add(text);
+    }
+    public Player getCurrentPlayer() {
+        return players.get(current);
+    }
+    public List<Player> getPlayers() {
+        return players;
+    }
+    public IngredientSet getSet() {
+        return set;
+    }
+    public List<Ingredient> getShop() {
+        return shop;
+    }
+    public Board getBoard() {
+        return board;
+    }
+    public Card getCurrentCard() {
+        return currentCard;
+    }
+    public int getRound() {
+        return round;
+    }
+    public int getCurrent() {
+        return current;
+    }
+    public int getDiceResult() {
+        return diceResult;
+    }
+    public List<String> getMessages() {
+        return messages;
+    }
+    public boolean isBrewing() {
+        return !choosing && !buying && !gameOver;
+    }
+    public boolean isChoosing() {
+        return choosing;
+    }
+    public boolean isBuying() {
+        return buying;
+    }
+    public boolean isGameOver() {
+        return gameOver;
+    }
 }

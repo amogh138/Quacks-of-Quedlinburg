@@ -1,15 +1,3 @@
-<<<<<<< HEAD
-public class QuacksExtraPanel extends JPanel {
-    public void paint(Graphics g) {}
-    private void draw scoreChart(Graphics2D g) {}
-    private void drawSets(Graphics2D g) {}
-    private void drawMainMenu(Graphics2D g) {
-        g.draw
-    }
-    private void drawHowToPlay(Graphics2D g) {}
-    private void drawPlayerNumSelect(Graphics2D g) {}
-    private void drawSetSelect(Graphics2D g) {}
-=======
 import java.awt.*;
 import java.awt.image.*;
 import javax.imageio.ImageIO;
@@ -22,7 +10,7 @@ import java.awt.event.KeyListener;
 
 public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListener
 {
-	private BufferedImage selectSet, menu, rPg1, rPg2, rPg3, rPg4, rPg5, rPg6, rPg7, rPg8;
+	private BufferedImage selectSet, menu, rPg1, rPg2, rPg3, rPg4, rPg5, rPg6, rPg7, rPg8, pNum, busted;
 	private String choice = "menu";
     public QuacksExtraPanel()
 	{
@@ -30,6 +18,8 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
 		{
         	selectSet = ImageIO.read(QuacksExtraPanel.class.getResource("SetSelect.png"));
             menu = ImageIO.read(QuacksExtraPanel.class.getResource("menu.png"));
+            pNum = ImageIO.read(QuacksExtraPanel.class.getResource("PlayerNum.png"));
+            busted = ImageIO.read(QuacksExtraPanel.class.getResource("Busted.png"));
             rPg1 = ImageIO.read(QuacksExtraPanel.class.getResource("RulesPg1.png"));
             rPg2 = ImageIO.read(QuacksExtraPanel.class.getResource("RulesPg2.png"));
             rPg3 = ImageIO.read(QuacksExtraPanel.class.getResource("RulesPg3.png"));
@@ -134,6 +124,24 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
         }
     }
 
+    private void drawScoreboard(Graphics2D g)
+    {
+        //kk
+    }
+
+    private void drawBusted(Graphics g)
+    {
+        super.paint(g);
+        switch(choice)
+        {
+            case "busted":
+                g.drawImage(busted, 0, 0, null);
+                break;
+            default:
+                g.drawImage(menu, 0, 0, null);
+        }
+    }
+
 	public void keyPressed(KeyEvent e) {}
 
 	public void keyReleased(KeyEvent e) {}
@@ -149,5 +157,4 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
 	public void mousePressed(MouseEvent e) {}
 
 	public void mouseReleased(MouseEvent e) {}
->>>>>>> 3f97afe15f6fb098a1582d711dd69a1d6efc152c
 }
