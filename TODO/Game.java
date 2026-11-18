@@ -31,7 +31,7 @@ public class Game {
     }
     private void makeCards() {
         for (int i = 1; i <= 24; i++) {
-            cards.add(new Card());
+            cards.add(cards.get(i));
         }
     }
     public void startGame() {
@@ -61,7 +61,13 @@ public class Game {
     public boolean canBuy(Ingredient i) {}
     private boolean canBuy(Player p, Ingredient i) {}
     public void buy(Ingredient i) {}
-    private void buy(Player p, Ingredient i) {}
+    private void buy(Player p, Ingredient i) {
+        if (canBuy(p, i)) {
+            p.getBag().add(i);
+            p.setCoins(p.getCoins() - i.getCost());
+            shop.remove(i);
+        }
+    }
     public void buyDrop() {}
     public void buyFlask() {}
     public void doneBuying() {

@@ -71,6 +71,24 @@ public class Player {
     public void spendCoins(int n) {
         coins-=n;
     }
+    public void addCherryBombs(int n) {
+        cherryBombTotal+=n;
+    }
+    public void addRatTails(int n) {
+        ratTails+=n;
+    }
+    public void spendRatTails(int n) {
+        ratTails-=n;
+    }
+    public void setPosition(int n) {
+        position = n;
+    }
+    public void setStartPosition(int n) {
+        startPosition = n;
+    }
+    public void setCoins(int n) {
+        coins = n;
+    }
     public void addPoints(int n) {
         points+=n;
     }
