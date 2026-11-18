@@ -1,3 +1,4 @@
+import java.util.*;
 public class Player {
     private final int LIMIT;
     private String name;
@@ -15,13 +16,27 @@ public class Player {
     private boolean flaskFilled;
     private boolean stopped;
     private boolean takeCoins;
-    public Player(String name, AI ai, List<Ingredient> startBag) {
+    public Player(String name, AI ai, ArrayList<Ingredient> startBag) {
+        this.LIMIT = 0;
         this.ai = ai;
         this.name = name;
         bag = startBag;
         position = startPosition;
+        pot = new ArrayList<>();
+        boughtThisRound = new ArrayList<>();
+        cherryBombTotal = 0;
+        coins = 0;
+        points = 0;
+        rubies = 0;
+        ratTails = 0;
+        flaskFilled = false;
+        stopped = true;
     }
-    public Ingredient draw(Random rng) {}
+    public Ingredient draw(Random rng) {
+        int r = (int) Math.random();
+        pot.add(bag.get(r));
+        return bag.get(r);
+    }
     public boolean isExploded() {
         if(cherryBombTotal > LIMIT) {
             return true;
@@ -41,8 +56,9 @@ public class Player {
         }
         bag = new ArrayList<>();
     }
-//for now commented public void undoLast() {        
-//}
+    public void undoLast() {
+        pot.removeLast();
+    }
     public void lowerBombs(int n) {
         cherryBombTotal-=n;
     }
@@ -65,23 +81,43 @@ public class Player {
         rubies-=n;
     }
     public void moveDrop(int n) {
+        startPosition+=n;
+    }
+    public void move(int n) {
         position+=n;
     }
-// commented for now public void move(int n) {}
     public void setRatTails(int n) {
         ratTails = n;
     }
-    public void fillFlask() {}
-    public void useFlask() {}
-    public void stop() {}
-    public void resume() {}
-    public void setTakeCoins(boolean takeCoins) {}
-    public String getName() {}
+    public void fillFlask() {
+        this.flaskFilled = true;
+    }
+    public void useFlask() {
+        flaskFilled = false;
+    }
+    public void stop() {
+        stopped = true; 
+    }
+    public void resume() {
+        stopped = false;
+    }
+    public void setTakeCoins(boolean takeCoins) {
+        this.takeCoins = takeCoins;
+    }
+    public String getName() {
+        return name;
+    }
     public AI getAI() {}
-    public boolean isAI() {}
-    public List<Ingredient> getBag() {}
-    public List<Ingredient> getPot() {}
-    public List<Ingredient> getBoughtThisRound() {}
+    public boolean isAI() {  }
+    public List<Ingredient> getBag() {
+        return bag;
+    }
+    public List<Ingredient> getPot() {
+        return pot;
+    }
+    public List<Ingredient> getBoughtThisRound() {
+        return boughtThisRound;
+    }
     public int getPosition() {
         return this.position;
     }
@@ -106,5 +142,7 @@ public class Player {
     public boolean isStopped() {
         return this.stopped;
     }
-    public boolean isTakeCoins() {}
+    public boolean isTakeCoins() {
+        return takeCoins;
+    }
 }

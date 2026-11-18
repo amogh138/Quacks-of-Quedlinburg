@@ -1,6 +1,6 @@
 import java.awt.*;
 import javax.swing.*;
-public class QuacksFrame {
+public class QuacksFrame extends JFrame{
     private final int WIDTH;
     private final int HEIGHT;
     public QuacksFrame(String framename) {
@@ -10,5 +10,6 @@ public class QuacksFrame {
         add(new QuacksExtraPanel());
         add(new QuacksBrewPanel());
         setVisible(true);
+
     }
 }
