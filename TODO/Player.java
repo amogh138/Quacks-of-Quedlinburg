@@ -107,8 +107,12 @@ public class Player {
     public String getName() {
         return name;
     }
-    public AI getAI() {}
-    public boolean isAI() {  }
+    public AI getAI() {
+        return ai;
+    }
+    public boolean isAI() {
+        return ai != null;
+    }
     public List<Ingredient> getBag() {
         return bag;
     }

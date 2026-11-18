@@ -96,7 +96,19 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
                 g.drawImage(menu, 0, 0, null);
         }
     }
-    private void drawPlayerNumSelect(Graphics g) {}
+    private void drawPlayerNumSelect(Graphics g)
+    {
+        super.paint(g);
+        switch(choice)
+        {
+            case "rPg1":
+                g.drawImage(rPg1, 0, 0, null);
+                break;
+
+            default:
+                g.drawImage(menu, 0, 0, null);
+        }
+    }
     private void drawSetSelect(Graphics g)
     {
         super.paint(g);
