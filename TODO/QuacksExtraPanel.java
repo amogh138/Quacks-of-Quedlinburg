@@ -10,16 +10,28 @@ import java.awt.event.KeyListener;
 
 public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListener
 {
-	private BufferedImage selectSet, menu, rPg1, rPg2, rPg3, rPg4, rPg5, rPg6, rPg7, rPg8, pNum, busted;
+	private BufferedImage selectSet, menu, rPg1, rPg2, rPg3, rPg4, rPg5, rPg6, rPg7, rPg8, pNum, busted, fCard, vBoard, yDrop, gDrop, rDrop, bDrop;
+    private BufferedImage q1, q2, q3, q4, bPhase, locked;
 	private String choice = "menu";
     public QuacksExtraPanel()
 	{
 		try
 		{
         	selectSet = ImageIO.read(QuacksExtraPanel.class.getResource("SetSelect.png"));
-            menu = ImageIO.read(QuacksExtraPanel.class.getResource("menu.png"));
+            menu = ImageIO.read(QuacksExtraPanel.class.getResource("MainMenu.png"));
             pNum = ImageIO.read(QuacksExtraPanel.class.getResource("PlayerNum.png"));
             busted = ImageIO.read(QuacksExtraPanel.class.getResource("Busted.png"));
+            fCard = ImageIO.read(QuacksExtraPanel.class.getResource("FortuneCard.png"));
+            vBoard = ImageIO.read(QuacksExtraPanel.class.getResource("VictoryBoard.png"));
+            yDrop = ImageIO.read(QuacksExtraPanel.class.getResource("yDrop.png"));
+            rDrop = ImageIO.read(QuacksExtraPanel.class.getResource("rDrop.png"));
+            bDrop = ImageIO.read(QuacksExtraPanel.class.getResource("bDrop.png"));
+            gDrop = ImageIO.read(QuacksExtraPanel.class.getResource("gDrop.png"));
+            locked = ImageIO.read(QuacksExtraPanel.class.getResource("locked.png"));
+            q1 = ImageIO.read(QuacksExtraPanel.class.getResource("quack1.png"));
+            q2 = ImageIO.read(QuacksExtraPanel.class.getResource("quack2.png"));
+            q3 = ImageIO.read(QuacksExtraPanel.class.getResource("quack3.png"));
+            q4 = ImageIO.read(QuacksExtraPanel.class.getResource("quack4.png"));
             rPg1 = ImageIO.read(QuacksExtraPanel.class.getResource("RulesPg1.png"));
             rPg2 = ImageIO.read(QuacksExtraPanel.class.getResource("RulesPg2.png"));
             rPg3 = ImageIO.read(QuacksExtraPanel.class.getResource("RulesPg3.png"));
@@ -126,7 +138,7 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
 
     private void drawScoreboard(Graphics2D g)
     {
-        //kk
+        
     }
 
     private void drawBusted(Graphics g)

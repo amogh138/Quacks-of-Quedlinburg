@@ -19,7 +19,13 @@ public class IngredientSet {
     public static List<IngredientSet> getAll() {
         List<IngredientSet> allSets = new ArrayList<>();
         IngredientSet set1 = new IngredientSet("Default Set", "This is the default set of ingredients.");
+        IngredientSet set2 = new IngredientSet("Default Set", "This is the default set of ingredients.");
+        IngredientSet set3 = new IngredientSet("Default Set", "This is the default set of ingredients.");
+        IngredientSet set4 = new IngredientSet("Default Set", "This is the default set of ingredients.");
         allSets.add(set1);
+        allSets.add(set2);
+        allSets.add(set3);
+        allSets.add(set4);
         return allSets;
     }
     public String getName() {
