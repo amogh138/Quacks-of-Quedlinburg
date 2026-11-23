@@ -3,12 +3,12 @@ public class IngredientSet {
     private String name;
     private String description;
     private List<Ingredient> ingredients;
-    private List<Ingredient> startBag;
-    public IngredientSet(String name, String description) {
+    private List<Ingredient> startBag;scription) {
         this.name = name;
         this.description = description;
         this.ingredients = new ArrayList<>();
         this.startBag = new ArrayList<>();
+    public IngredientSet(String name, String de
     }
     public void addIngredient(Ingredient i) {
         ingredients.add(i);
