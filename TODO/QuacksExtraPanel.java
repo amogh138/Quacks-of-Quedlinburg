@@ -13,13 +13,18 @@ import java.util.Collections;
 public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListener
 {
     private BufferedImage selectSet, menu, rPg1, rPg2, rPg3, rPg4, rPg5, rPg6, rPg7, rPg8, pNum, busted, fCard, vBoard, yDrop, gDrop, rDrop, bDrop;
-    private BufferedImage q1, q2, q3, q4, bPhase, locked, board;
+    private BufferedImage q1, q2, q3, q4, locked, board, gMode;
+    private BufferedImage bPhase21, bPhase22, bPhase23, bPhase24, bPhase31, bPhase32, bPhase33, bPhase34;
     private BufferedImage bFCard1, bFCard2, bFCard3, bFCard4, bFCard5, bFCard6, bFCard7, bFCard8, bFCard9;
     private BufferedImage pFCard1, pFCard2, pFCard3, pFCard4, pFCard5, pFCard6, pFCard7, pFCard8, pFCard9;
+    private int[] coins = new int[4];
+    private int[] rubies = new int[4];
+    private int[] vbSpot = new int[4];
     
     private int selectedSet;
     private int numPlayers;
-    //private String 
+    private boolean hotSeat;
+    private int cBuyer = 1;
     
     private String choice = "menu";
     private BufferedImage activeDrawnCard = null; //current card displayed
@@ -31,6 +36,8 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
         try
         {
             board = ImageIO.read(QuacksExtraPanel.class.getResource("Image/Background.png"));
+            bPhase24 = ImageIO.read(QuacksExtraPanel.class.getResource("Image/buyPhase.png"));
+            gMode = ImageIO.read(QuacksExtraPanel.class.getResource("Image/GameMode.png"));
             selectSet = ImageIO.read(QuacksExtraPanel.class.getResource("Image/SetSelect.png"));
             menu = ImageIO.read(QuacksExtraPanel.class.getResource("Image/MainMenu.png"));
             pNum = ImageIO.read(QuacksExtraPanel.class.getResource("Image/PlayerNum.png"));
@@ -154,6 +161,13 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
                 g.drawImage(pNum, 0, 0, panelWidth, panelHeight, null);
             }
         } 
+        else if (choice.equals("gMode")) 
+        {
+            if (gMode != null)
+            {
+                g.drawImage(gMode, 0, 0, panelWidth, panelHeight, null);
+            }
+        }
         else if (choice.equals("fCard")) 
         {
             if (fCard != null)
@@ -171,6 +185,13 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
                 g.setColor(Color.WHITE);
                 g.setFont(new Font("Arial", Font.BOLD, 22));
                 g.drawString("Start brewing", 680, 660);
+            }
+        } 
+        else if (choice.equals("bPhase24")) 
+        {
+            if (bPhase24 != null)
+            {
+                g.drawImage(bPhase24, 0, 0, panelWidth, panelHeight, null);
             }
         } 
         else if (choice.equals("busted")) 
@@ -238,10 +259,14 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
             } else if (choice.equals("pNum")) 
             {
                 choice = "setSelect";
-            } else if (choice.equals("fCard")) 
+            } else if (choice.equals("gMode")) 
             {
                 choice = "pNum";
-            } else if (choice.startsWith("rPg")) 
+            }  else if (choice.equals("bPhase24")) 
+            {
+                choice = "fCard";
+            }
+            else if (choice.startsWith("rPg")) 
             {
                 if (choice.equals("rPg1")) 
                 {
@@ -254,6 +279,9 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
             } else if (choice.equals("busted")) 
             {
                 choice = "fCard";
+            }else if (choice.equals("fCard"))
+            {
+            	choice = "gMode";
             }
             repaint();
             return;
@@ -301,27 +329,67 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
             if (x >= 171 && x <= 533 && y >= 155 && y <= 511)
             {
                 numPlayers = 1;
-                choice = "fCard";
+                choice = "gMode";
                 resetFortuneDeck();
             }
             else if (x >= 116 && x <= 597 && y >= 533 && y <= 909)
             {
                 numPlayers = 2;
-                choice = "fCard";
+                choice = "gMode";
                 resetFortuneDeck();
             }
             else if (x >= 836 && x <= 1375 && y >= 142 && y <= 530)
             {
                 numPlayers = 3;
-                choice = "fCard";
+                choice = "gMode";
                 resetFortuneDeck();
             }
             else if (x >= 839 && x <= 1331 && y >= 547 && y <= 912)
             {
                 numPlayers = 4;
-                choice = "fCard";
+                choice = "gMode";
                 resetFortuneDeck();
             }
+        }
+        else if(choice.equals("gMode"))
+        {
+        	if(x >= 179 && x <= 719 && y >= 521 && y <= 757)
+        	{
+        		hotSeat = true;
+        		choice = "fCard";
+        	}
+        	else if(x >= 100 && x <= 1541 && y >= 521 && y <= 756)
+        	{
+        		hotSeat = false;
+        		choice = "fCard";
+        	}
+        }
+        else if(choice.equals("bPhase24"))
+        {
+        	if(x >= 179 && x <= 719 && y >= 521 && y <= 757)
+        	{
+        		if(cBuyer == 1)
+        		{
+        			cBuyer = 2;
+        		}
+        		else if(cBuyer == 2)
+        		{
+        			cBuyer = 3;
+        		}
+        		else if(cBuyer == 3)
+        		{
+        			cBuyer = 4;
+        		}
+        		else if(cBuyer == 4)
+        		{
+        			
+        		}
+        	}
+        	else if(x >= 100 && x <= 1541 && y >= 521 && y <= 756)
+        	{
+        		hotSeat = false;
+        		choice = "fCard";
+        	}
         }
         //FORTUNE CARD SCREEN -> Draw Card & Start brewing
         else if (choice.equals("fCard")) 
@@ -340,6 +408,7 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
             else if (activeDrawnCard != null && x >= 632 && x <= 879 && y >= 613 && y <= 688) 
             {
                 System.out.println("Start brewing clicked! Moving to brewing phase.");
+                choice = "bPhase24";
             }
         }
         //RULES PAGES NAVIGATION
