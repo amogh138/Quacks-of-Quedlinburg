@@ -4,8 +4,8 @@ public class Game {
     private int playerCount;
     private int humanCount;
     private IngredientSet set;
-    private List<Player> players;
-    private List<Ingredient> shop;
+    private ArrayList<Player> players;
+    private ArrayList<Ingredient> shop;
     private ArrayList<Card> cards;
     private Board board;
     private Card currentCard;
@@ -19,15 +19,6 @@ public class Game {
     private boolean[] decided;
     private List<String> messages;
     public Game(int playerCount, int humanCount, IngredientSet set) {
-        if (playerCount < 2 || playerCount > 4) {
-            throw new IllegalArgumentException("The game requires 2 to 4 players.");
-        }
-        if (humanCount < 0 || humanCount > playerCount) {
-            throw new IllegalArgumentException("Invalid number of human players.");
-        }
-        if (set == null) {
-            throw new IllegalArgumentException("An ingredient set is required.");
-        }
         MAX_ROUNDS = 9;
         this.playerCount = playerCount;
         this.humanCount = humanCount;
@@ -35,7 +26,7 @@ public class Game {
         rng = new Random();
         players = new ArrayList<Player>();
         shop = new ArrayList<Ingredient>();
-        cards = new ArrayList<Card>();
+        cards = new ArrayList<Card>(); //add cards
         messages = new ArrayList<String>();
         decided = new boolean[playerCount];
         int length = 54;
@@ -69,8 +60,7 @@ public class Game {
         gameOver = false;
         decided = new boolean[playerCount];
         makeCards();
-        ArrayList<Ingredient> startingBag =
-                new ArrayList<Ingredient>(set.getStartBag());
+        ArrayList<Ingredient> startingBag = new ArrayList<Ingredient>(set.getStartBag());
         for (int i = 0; i < playerCount; i++) {
             AI ai = i < humanCount ? null : new AI(0.5);
             Player p = new Player(
@@ -270,8 +260,7 @@ public class Game {
         Player p = players.get(current);
         p.setTakeCoins(takeCoins);
         decided[current] = true;
-        addMessage(p.getName()
-                + (takeCoins ? " chose coins." : " chose points."));
+        addMessage(p.getName() + (takeCoins ? " chose coins." : " chose points."));
         nextChoice();
     }
     private void rollDice() {
@@ -432,12 +421,7 @@ public class Game {
         Player winner = players.get(0);
         for (int i = 0; i < players.size(); i++) {
             Player p = players.get(i);
-            if (p.getPoints() > winner.getPoints()
-                    || (p.getPoints() == winner.getPoints()
-                    && p.getRubies() > winner.getRubies())
-                    || (p.getPoints() == winner.getPoints()
-                    && p.getRubies() == winner.getRubies()
-                    && p.getPot().size() > winner.getPot().size())) {
+            if (p.getPoints() > winner.getPoints() || (p.getPoints() == winner.getPoints() && p.getRubies() > winner.getRubies()) || (p.getPoints() == winner.getPoints() && p.getRubies() == winner.getRubies() && p.getPot().size() > winner.getPot().size())) {
                 winner = p;
             }
         }

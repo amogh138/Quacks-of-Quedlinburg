@@ -32,10 +32,10 @@ public class Player {
         flaskFilled = false;
         stopped = true;
     }
-    public Ingredient draw(Random rng) {
-        int r = (int) Math.random();
+    public Ingredient draw() {
+        int r = (int) Math.random()*10;
         pot.add(bag.get(r));
-        return bag.get(r);
+        return bag.remove(r);
     }
     public boolean isExploded() {
         if(cherryBombTotal > LIMIT) {
@@ -43,7 +43,7 @@ public class Player {
         }
         return false;
     }
-    private void startRound(List<Ingredient> startBag) {
+    public void startRound(List<Ingredient> startBag) {
         bag = startBag;
         boughtThisRound = new ArrayList<>();
         position = 0;
