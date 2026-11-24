@@ -13,13 +13,13 @@ import java.util.Collections;
 public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListener
 {
     private BufferedImage selectSet, menu, rPg1, rPg2, rPg3, rPg4, rPg5, rPg6, rPg7, rPg8, pNum, busted, fCard, vBoard, yDrop, gDrop, rDrop, bDrop;
-    private BufferedImage q1, q2, q3, q4, bPhase, locked, board;
+    private BufferedImage q1, q2, q3, q4, bPhase, locked, board, gMode;
     private BufferedImage bFCard1, bFCard2, bFCard3, bFCard4, bFCard5, bFCard6, bFCard7, bFCard8, bFCard9;
     private BufferedImage pFCard1, pFCard2, pFCard3, pFCard4, pFCard5, pFCard6, pFCard7, pFCard8, pFCard9;
     
     private int selectedSet;
     private int numPlayers;
-    //private String 
+    private boolean hotSeat;
     
     private String choice = "menu";
     private BufferedImage activeDrawnCard = null; //current card displayed
@@ -31,6 +31,7 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
         try
         {
             board = ImageIO.read(QuacksExtraPanel.class.getResource("Image/Background.png"));
+            gMode = ImageIO.read(QuacksExtraPanel.class.getResource("Image/GameMode.png"));
             selectSet = ImageIO.read(QuacksExtraPanel.class.getResource("Image/SetSelect.png"));
             menu = ImageIO.read(QuacksExtraPanel.class.getResource("Image/MainMenu.png"));
             pNum = ImageIO.read(QuacksExtraPanel.class.getResource("Image/PlayerNum.png"));
@@ -154,6 +155,13 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
                 g.drawImage(pNum, 0, 0, panelWidth, panelHeight, null);
             }
         } 
+        else if (choice.equals("gMode")) 
+        {
+            if (gMode != null)
+            {
+                g.drawImage(gMode, 0, 0, panelWidth, panelHeight, null);
+            }
+        }
         else if (choice.equals("fCard")) 
         {
             if (fCard != null)
@@ -238,10 +246,11 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
             } else if (choice.equals("pNum")) 
             {
                 choice = "setSelect";
-            } else if (choice.equals("fCard")) 
+            } else if (choice.equals("gMode")) 
             {
                 choice = "pNum";
-            } else if (choice.startsWith("rPg")) 
+            } 
+            else if (choice.startsWith("rPg")) 
             {
                 if (choice.equals("rPg1")) 
                 {
@@ -254,6 +263,9 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
             } else if (choice.equals("busted")) 
             {
                 choice = "fCard";
+            }else if (choice.equals("fCard"))
+            {
+            	choice = "gMode";
             }
             repaint();
             return;
@@ -301,27 +313,40 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
             if (x >= 171 && x <= 533 && y >= 155 && y <= 511)
             {
                 numPlayers = 1;
-                choice = "fCard";
+                choice = "gMode";
                 resetFortuneDeck();
             }
             else if (x >= 116 && x <= 597 && y >= 533 && y <= 909)
             {
                 numPlayers = 2;
-                choice = "fCard";
+                choice = "gMode";
                 resetFortuneDeck();
             }
             else if (x >= 836 && x <= 1375 && y >= 142 && y <= 530)
             {
                 numPlayers = 3;
-                choice = "fCard";
+                choice = "gMode";
                 resetFortuneDeck();
             }
             else if (x >= 839 && x <= 1331 && y >= 547 && y <= 912)
             {
                 numPlayers = 4;
-                choice = "fCard";
+                choice = "gMode";
                 resetFortuneDeck();
             }
+        }
+        else if(choice.equals("gMode"))
+        {
+        	if(x >= 179 && x <= 719 && y >= 521 && y <= 757)
+        	{
+        		hotSeat = true;
+        		choice = "fCard";
+        	}
+        	else if(x >= 100 && x <= 1541 && y >= 521 && y <= 756)
+        	{
+        		hotSeat = false;
+        		choice = "fCard";
+        	}
         }
         //FORTUNE CARD SCREEN -> Draw Card & Start brewing
         else if (choice.equals("fCard")) 
