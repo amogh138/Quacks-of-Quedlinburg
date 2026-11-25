@@ -1,4 +1,6 @@
 import java.util.*;
+import java.awt.image.BufferedImage;
+
 public class Player {
     private final int LIMIT;
     private String name;
@@ -16,12 +18,14 @@ public class Player {
     private boolean flaskFilled;
     private boolean stopped;
     private boolean takeCoins;
+
     public Player(String name, AI ai, ArrayList<Ingredient> startBag) {
-        this.LIMIT = 0;
+        this.LIMIT = 7;
         this.ai = ai;
         this.name = name;
         bag = startBag;
-        position = startPosition;
+        position = 0;
+        startPosition = 0;
         pot = new ArrayList<>();
         boughtThisRound = new ArrayList<>();
         cherryBombTotal = 0;
@@ -32,138 +36,183 @@ public class Player {
         flaskFilled = false;
         stopped = true;
     }
+
     public Ingredient draw() {
-        int r = (int) Math.random()*10;
-        pot.add(bag.get(r));
-        return bag.remove(r);
-    }
-    public boolean isExploded() {
-        if(cherryBombTotal > LIMIT) {
-            return true;
+        if (bag.isEmpty()) {
+            return null;
         }
-        return false;
+        int r = (int) Math.random() * bag.size();
+        Ingredient ingredient = bag.get(r);
+        pot.add(ingredient);
+        bag.remove(r);
+        return ingredient;
     }
+
+    public boolean isExploded() {
+        return cherryBombTotal > LIMIT;
+    }
+
     public void startRound(List<Ingredient> startBag) {
         bag = startBag;
         boughtThisRound = new ArrayList<>();
-        position = 0;
+        position = getRatTails();
         cherryBombTotal = 0;
         stopped = true;
     }
+
     public void endRound() {
         for(Ingredient i : bag) {
             pot.add(i);
         }
         bag = new ArrayList<>();
     }
+
     public void undoLast() {
-        pot.removeLast();
+        if (!pot.isEmpty()) {
+            pot.remove(pot.size() - 1);
+        }
     }
+
     public void lowerBombs(int n) {
-        cherryBombTotal-=n;
+        cherryBombTotal = Math.max(0, cherryBombTotal - n);
     }
+
     public void addToBag(Ingredient i) {
         bag.add(i);
     }
+
     public void addCoins(int n) {
-        coins+=n;
+        coins += n;
     }
+
     public void spendCoins(int n) {
-        coins-=n;
+        coins -= n;
     }
+
     public void addCherryBombs(int n) {
-        cherryBombTotal+=n;
+        cherryBombTotal += n;
     }
+
     public void addRatTails(int n) {
-        ratTails+=n;
+        ratTails += n;
     }
+
     public void spendRatTails(int n) {
-        ratTails-=n;
+        ratTails = Math.max(0, ratTails - n);
     }
+
     public void setPosition(int n) {
         position = n;
     }
+
     public void setStartPosition(int n) {
         startPosition = n;
     }
+
     public void setCoins(int n) {
         coins = n;
     }
+
     public void addPoints(int n) {
-        points+=n;
+        points += n;
     }
+
     public void addRubies(int n) {
-        rubies+=n;
+        rubies += n;
     }
+
     public void spendRubies(int n) {
-        rubies-=n;
+        rubies = Math.max(0, rubies - n);
     }
+
     public void moveDrop(int n) {
-        startPosition+=n;
+        startPosition += n;
     }
+
     public void move(int n) {
-        position+=n;
+        position += n;
     }
+
     public void setRatTails(int n) {
         ratTails = n;
     }
+
     public void fillFlask() {
         this.flaskFilled = true;
     }
+
     public void useFlask() {
         flaskFilled = false;
     }
+
     public void stop() {
-        stopped = true; 
+        stopped = true;
     }
+
     public void resume() {
         stopped = false;
     }
+
     public void setTakeCoins(boolean takeCoins) {
         this.takeCoins = takeCoins;
     }
+
     public String getName() {
         return name;
     }
+
     public AI getAI() {
         return ai;
     }
+
     public boolean isAI() {
         return ai != null;
     }
+
     public List<Ingredient> getBag() {
         return bag;
     }
+
     public List<Ingredient> getPot() {
         return pot;
     }
+
     public List<Ingredient> getBoughtThisRound() {
         return boughtThisRound;
     }
+
     public int getPosition() {
         return this.position;
     }
+
     public int getCherryBombTotal() {
         return this.cherryBombTotal;
     }
+
     public int getCoins() {
         return this.coins;
     }
+
     public int getPoints() {
         return this.points;
     }
+
     public int getRubies() {
         return this.rubies;
     }
+
     public int getRatTails() {
         return this.ratTails;
     }
+
     public boolean isFlaskFilled() {
         return this.flaskFilled;
     }
+
     public boolean isStopped() {
         return this.stopped;
     }
+
     public boolean isTakeCoins() {
         return takeCoins;
     }

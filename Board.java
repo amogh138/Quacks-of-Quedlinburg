@@ -1,61 +1,77 @@
+import java.util.*;
+import java.awt.image.BufferedImage;
+
 public class Board {
     private final int LENGTH;
     private final int HEIGHT;
     private int[] coinTrack;
     private int[] pointTrack;
     private boolean[] rubySpaces;
+
     public Board(int l, int h, int[] coinSet, int[] pointSet, boolean[] rubySet) {
         LENGTH = l;
         HEIGHT = h;
-        coinTrack = coinSet;
-        pointTrack = pointSet;
-        rubySpaces = rubySet;
+        coinTrack = Arrays.copyOf(coinSet, l);
+        pointTrack = Arrays.copyOf(pointSet, l);
+        rubySpaces = Arrays.copyOf(rubySet, l);
     }
+
     public int getCoins(int position) {
+        validatePosition(position);
         return coinTrack[position];
     }
-    public int getPoints(int position) { 
+
+    public int getPoints(int position) {
+        validatePosition(position);
         return pointTrack[position];
     }
+
     public boolean hasRuby(int position) {
-        if(rubySpaces[position]) {
-            return true;
-        }
-        return false;
+        validatePosition(position);
+        return rubySpaces[position];
     }
+
+    private void validatePosition(int position) {
+        if (position < 0 || position >= LENGTH) {
+            throw new IndexOutOfBoundsException("Position " + position + " out of bounds [0-" + (LENGTH-1) + "]");
+        }
+    }
+
     public int getHeight() {
         return HEIGHT;
     }
+
     public int getLength() {
         return LENGTH;
     }
+
     public void setCoins(int position, int coins) {
+        validatePosition(position);
         coinTrack[position] = coins;
     }
+
     public void setPoints(int position, int points) {
+        validatePosition(position);
         pointTrack[position] = points;
     }
+
     public void setRuby(int position, boolean hasRuby) {
+        validatePosition(position);
         rubySpaces[position] = hasRuby;
     }
+
     public int[] getCoinTrack() {
-        return coinTrack;
+        return Arrays.copyOf(coinTrack, LENGTH);
     }
+
     public int[] getPointTrack() {
-        return pointTrack;
+        return Arrays.copyOf(pointTrack, LENGTH);
     }
+
     public boolean[] getRubySpaces() {
-        return rubySpaces;
+        return Arrays.copyOf(rubySpaces, LENGTH);
     }
-    public void setCoinTrack(int[] coinTrack) {
-        this.coinTrack = coinTrack;
-    }
-    public void setPointTrack(int[] pointTrack) {
-        this.pointTrack = pointTrack;
-    }
-    public void setRubySpaces(boolean[] rubySpaces) {
-        this.rubySpaces = rubySpaces;
-    }
+
     public void reset() {
         for(int i = 0; i < LENGTH; i++) {
             coinTrack[i] = 0;
@@ -63,56 +79,66 @@ public class Board {
             rubySpaces[i] = false;
         }
     }
+
     public void resetCoins() {
-        for(int i = 0; i < LENGTH; i++) {
-            coinTrack[i] = 0;
-        }
+        Arrays.fill(coinTrack, 0);
     }
+
     public void resetPoints() {
-        for(int i = 0; i < LENGTH; i++) {
-            pointTrack[i] = 0;
-        }
+        Arrays.fill(pointTrack, 0);
     }
+
     public void resetRubies() {
-        for(int i = 0; i < LENGTH; i++) {
-            rubySpaces[i] = false;
-        }
+        Arrays.fill(rubySpaces, false);
     }
-    public void setBoard(int[] coinSet, int[] pointSet, boolean[] rubySet) {
-        coinTrack = coinSet;
-        pointTrack = pointSet;
-        rubySpaces = rubySet;
-    }
+
     public void setBoard(Board b) {
-        coinTrack = b.getCoinTrack();
-        pointTrack = b.getPointTrack();
-        rubySpaces = b.getRubySpaces();
+        coinTrack = Arrays.copyOf(b.getCoinTrack(), LENGTH);
+        pointTrack = Arrays.copyOf(b.getPointTrack(), LENGTH);
+        rubySpaces = Arrays.copyOf(b.getRubySpaces(), LENGTH);
     }
-    public void setBoard(int[] coinSet, int[] pointSet) {
-        coinTrack = coinSet;
-        pointTrack = pointSet;
-    }
-    public void setBoard(int[] coinSet, boolean[] rubySet) {
-        coinTrack = coinSet;
-        rubySpaces = rubySet;
-    }
-    public void setBoard(boolean[] rubySet, int[] pointSet) {
-        rubySpaces = rubySet;
-        pointTrack = pointSet;
-    }
-    public void setBoard(boolean[] rubySet) {
-        rubySpaces = rubySet;
-    }
+
     public void setBoard(Board b, boolean reset) {
         if(reset) {
             reset();
         }
+        coinTrack = Arrays.copyOf(b.getCoinTrack(), LENGTH);
+        pointTrack = Arrays.copyOf(b.getPointTrack(), LENGTH);
+        rubySpaces = Arrays.copyOf(b.getRubySpaces(), LENGTH);
     }
+
+    public void setBoard(int[] coinSet, int[] pointSet, boolean[] rubySet) {
+        coinTrack = Arrays.copyOf(coinSet, LENGTH);
+        pointTrack = Arrays.copyOf(pointSet, LENGTH);
+        rubySpaces = Arrays.copyOf(rubySet, LENGTH);
+    }
+
+    public void setBoard(int[] coinSet, int[] pointSet) {
+        coinTrack = Arrays.copyOf(coinSet, LENGTH);
+        pointTrack = Arrays.copyOf(pointSet, LENGTH);
+    }
+
+    public void setBoard(int[] coinSet, boolean[] rubySet) {
+        coinTrack = Arrays.copyOf(coinSet, LENGTH);
+        rubySpaces = Arrays.copyOf(rubySet, LENGTH);
+    }
+
+    public void setBoard(boolean[] rubySet, int[] pointSet) {
+        rubySpaces = Arrays.copyOf(rubySet, LENGTH);
+        pointTrack = Arrays.copyOf(pointSet, LENGTH);
+    }
+
+    public void setBoard(boolean[] rubySet) {
+        rubySpaces = Arrays.copyOf(rubySet, LENGTH);
+    }
+
     public String toString() {
-        String sb = "";
+        StringBuilder sb = new StringBuilder();
         for(int i = 0; i < LENGTH; i++) {
-            sb += "Position " + i + ": " + coinTrack[i] + " coins, " + pointTrack[i] + " points, Ruby: " + rubySpaces[i] + "\n";
+            sb.append("Position ").append(i).append(": ")
+              .append(coinTrack[i]).append(" coins, ")
+              .append(pointTrack[i]).append(" points, Ruby: ").append(rubySpaces[i]).append("\n");
         }
-        return sb;
+        return sb.toString();
     }
 }
