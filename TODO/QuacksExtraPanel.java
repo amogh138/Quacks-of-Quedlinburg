@@ -13,7 +13,7 @@ import java.util.Collections;
 public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListener
 {
     private BufferedImage selectSet, menu, rPg1, rPg2, rPg3, rPg4, rPg5, rPg6, rPg7, rPg8, pNum, busted, fCard, vBoard, yDrop, gDrop, rDrop, bDrop;
-    private BufferedImage q1, q2, q3, q4, locked, board, gMode;
+    private BufferedImage q1, q2, q3, q4, locked, board, gMode, fMarker;
     private BufferedImage bPhase21, bPhase22, bPhase23, bPhase24, bPhase31, bPhase32, bPhase33, bPhase34;
     private BufferedImage bFCard1, bFCard2, bFCard3, bFCard4, bFCard5, bFCard6, bFCard7, bFCard8, bFCard9;
     private BufferedImage pFCard1, pFCard2, pFCard3, pFCard4, pFCard5, pFCard6, pFCard7, pFCard8, pFCard9;
@@ -22,9 +22,10 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
     private int[] vbSpot = new int[4];
     
     private int selectedSet;
+    private String m;
     private int numPlayers;
     private boolean hotSeat;
-    private int cBuyer = 1;
+    private int cBuyer = 0;
     
     private String choice = "menu";
     private BufferedImage activeDrawnCard = null; //current card displayed
@@ -36,7 +37,15 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
         try
         {
             board = ImageIO.read(QuacksExtraPanel.class.getResource("Image/Background.png"));
+            fMarker = ImageIO.read(QuacksExtraPanel.class.getResource("Image/FlameMarker.png"));
             bPhase24 = ImageIO.read(QuacksExtraPanel.class.getResource("Image/buyPhase.png"));
+            bPhase23 = ImageIO.read(QuacksExtraPanel.class.getResource("Image/buyPhase23.png"));
+            bPhase22 = ImageIO.read(QuacksExtraPanel.class.getResource("Image/buyPhase22.png"));
+            bPhase21 = ImageIO.read(QuacksExtraPanel.class.getResource("Image/buyPhase21.png"));
+            bPhase34 = ImageIO.read(QuacksExtraPanel.class.getResource("Image/buyPhase34.png"));
+            bPhase33 = ImageIO.read(QuacksExtraPanel.class.getResource("Image/buyPhase33.png"));
+            bPhase32 = ImageIO.read(QuacksExtraPanel.class.getResource("Image/buyPhase32.png"));
+            bPhase31 = ImageIO.read(QuacksExtraPanel.class.getResource("Image/buyPhase31.png"));
             gMode = ImageIO.read(QuacksExtraPanel.class.getResource("Image/GameMode.png"));
             selectSet = ImageIO.read(QuacksExtraPanel.class.getResource("Image/SetSelect.png"));
             menu = ImageIO.read(QuacksExtraPanel.class.getResource("Image/MainMenu.png"));
@@ -193,12 +202,68 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
             {
                 g.drawImage(bPhase24, 0, 0, panelWidth, panelHeight, null);
             }
-        } 
+        }
+        else if (choice.equals("bPhase23")) 
+        {
+            if (bPhase23 != null)
+            {
+                g.drawImage(bPhase23, 0, 0, panelWidth, panelHeight, null);
+            }
+        }
+        else if (choice.equals("bPhase22")) 
+        {
+            if (bPhase22 != null)
+            {
+                g.drawImage(bPhase22, 0, 0, panelWidth, panelHeight, null);
+            }
+        }
+        else if (choice.equals("bPhase21")) 
+        {
+            if (bPhase21 != null)
+            {
+                g.drawImage(bPhase21, 0, 0, panelWidth, panelHeight, null);
+            }
+        }
+        else if (choice.equals("bPhase34")) 
+        {
+            if (bPhase34 != null)
+            {
+                g.drawImage(bPhase34, 0, 0, panelWidth, panelHeight, null);
+            }
+        }
+        else if (choice.equals("bPhase33")) 
+        {
+            if (bPhase33 != null)
+            {
+                g.drawImage(bPhase33, 0, 0, panelWidth, panelHeight, null);
+            }
+        }
+        else if (choice.equals("bPhase32")) 
+        {
+            if (bPhase32 != null)
+            {
+                g.drawImage(bPhase32, 0, 0, panelWidth, panelHeight, null);
+            }
+        }
+        else if (choice.equals("bPhase31")) 
+        {
+            if (bPhase31 != null)
+            {
+                g.drawImage(bPhase31, 0, 0, panelWidth, panelHeight, null);
+            }
+        }
         else if (choice.equals("busted")) 
         {
             if (busted != null) 
             {
                 g.drawImage(busted, 0, 0, panelWidth, panelHeight, null);
+            }
+        } 
+        else if (choice.equals("vBoard")) 
+        {
+            if (vBoard != null) 
+            {
+                g.drawImage(vBoard, 0, 0, panelWidth, panelHeight, null);
             }
         } 
         else if (choice.startsWith("rPg")) 
@@ -223,6 +288,107 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
             g.setColor(Color.WHITE);
             g.setFont(new Font("Arial", Font.BOLD, 18));
             g.drawString("← Back", 48, 62);
+        }
+        
+      //Green "Next" button on buying phase
+        if(choice.contains("bPhase") && cBuyer == 0)
+        {
+        	g.setColor(Color.GREEN);
+            g.fillRect(282+50, 838, 100, 50);
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Arial", Font.BOLD, 18));
+            g.drawString("Start", 282+78, 838+32);
+        }
+        if(choice.contains("bPhase") && cBuyer > 0 && cBuyer < 4)
+        {
+        	if(cBuyer == 1)
+        	{
+        		int xSpot = 78;
+                int ySpot = 108;
+                int width = 578;
+                int height = 125;
+                int thickness = 10;
+
+                g.setColor(Color.WHITE);
+
+                for (int i = 0; i < thickness; i++) 
+                {
+                    g.drawRect(xSpot + i, ySpot + i, width - (i * 2), height - (i * 2));
+                }
+                g.setColor(Color.GREEN);
+                g.fillRect(282+50, 838, 100, 50);
+                g.setColor(Color.WHITE);
+                g.setFont(new Font("Arial", Font.BOLD, 18));
+                g.drawString("Next", 282+78, 838+32);
+        	}
+        	if(cBuyer == 2)
+        	{
+        		int xSpot = 78;
+                int ySpot = 108+173;
+                int width = 578;
+                int height = 125;
+                int thickness = 10;
+
+                g.setColor(Color.WHITE);
+
+                for (int i = 0; i < thickness; i++) 
+                {
+                    g.drawRect(xSpot + i, ySpot + i, width - (i * 2), height - (i * 2));
+                }
+                g.setColor(Color.GREEN);
+                g.fillRect(282+50, 838, 100, 50);
+                g.setColor(Color.WHITE);
+                g.setFont(new Font("Arial", Font.BOLD, 18));
+                g.drawString("Next", 282+78, 838+32);
+        	}
+        	if(cBuyer == 3)
+        	{
+        		int xSpot = 78;
+                int ySpot = 108+173+203;
+                int width = 578;
+                int height = 125;
+                int thickness = 10;
+
+                g.setColor(Color.WHITE);
+
+                for (int i = 0; i < thickness; i++) 
+                {
+                    g.drawRect(xSpot + i, ySpot + i, width - (i * 2), height - (i * 2));
+                }
+                g.setColor(Color.GREEN);
+                g.fillRect(282+50, 838, 100, 50);
+                g.setColor(Color.WHITE);
+                g.setFont(new Font("Arial", Font.BOLD, 18));
+                g.drawString("Next", 282+78, 838+32);
+        	}
+        }
+        if(choice.contains("bPhase") && cBuyer == 4)
+        {
+        	int xSpot = 78;
+            int ySpot = 740-37-20;
+            int width = 578;
+            int height = 125;
+            int thickness = 10;
+
+            g.setColor(Color.WHITE);
+
+            for (int i = 0; i < thickness; i++) 
+            {
+                g.drawRect(xSpot + i, ySpot + i, width - (i * 2), height - (i * 2));
+            }
+        	g.setColor(Color.GREEN);
+            g.fillRect(282+50, 838, 100, 50);
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Arial", Font.BOLD, 18));
+            g.drawString("Continue", 282+63, 838+32);
+        }
+        if(choice.equals("vBoard"))
+        {
+        	g.setColor(Color.GREEN);
+            g.fillRect(getWidth()/2-50, 866, 150, 50);
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Arial", Font.BOLD, 18));
+            g.drawString("Move Drop", getWidth()/2-50+23, 866+32);//(496,866)
         }
     }
 
@@ -265,6 +431,27 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
             }  else if (choice.equals("bPhase24")) 
             {
                 choice = "fCard";
+            }  else if (choice.equals("bPhase23")) 
+            {
+                choice = "fCard";
+            }  else if (choice.equals("bPhase22")) 
+            {
+                choice = "fCard";
+            }  else if (choice.equals("bPhase21")) 
+            {
+                choice = "fCard";
+            }  else if (choice.equals("bPhase34")) 
+            {
+                choice = "fCard";
+            }  else if (choice.equals("bPhase33")) 
+            {
+                choice = "fCard";
+            }  else if (choice.equals("bPhase32")) 
+            {
+                choice = "fCard";
+            }  else if (choice.equals("bPhase31")) 
+            {
+                choice = "fCard";
             }
             else if (choice.startsWith("rPg")) 
             {
@@ -282,6 +469,10 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
             }else if (choice.equals("fCard"))
             {
             	choice = "gMode";
+            }
+            else if(choice.equals("vBoard"))
+            {
+            	choice = m;
             }
             repaint();
             return;
@@ -306,21 +497,25 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
             {
                 selectedSet = 1;
                 choice = "pNum";
+                System.out.println("Set number: "+ selectedSet);
             }
             else if (x >= 826 && x <= 1296 && y >= 310 && y <= 583)
             {
                 selectedSet = 2;
                 choice = "pNum";
+                System.out.println("Set number: "+ selectedSet);
             }
             else if (x >= 175 && x <= 611 && y >= 505 && y <= 791)
             {
                 selectedSet = 3;
                 choice = "pNum";
+                System.out.println("Set number: "+ selectedSet);
             }
             else if (x >= 795 && x <= 1258 && y >= 627 && y <= 903)
             {
                 selectedSet = 4;
                 choice = "pNum";
+                System.out.println("Set number: "+ selectedSet);
             }
         }
         //PLAYER NUMBER SELECT SCREEN -> leads to Fortune Card screen & resets deck
@@ -331,24 +526,28 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
                 numPlayers = 1;
                 choice = "gMode";
                 resetFortuneDeck();
+                System.out.println("Number of Players: " + numPlayers);
             }
             else if (x >= 116 && x <= 597 && y >= 533 && y <= 909)
             {
                 numPlayers = 2;
                 choice = "gMode";
                 resetFortuneDeck();
+                System.out.println("Number of Players: " + numPlayers);
             }
             else if (x >= 836 && x <= 1375 && y >= 142 && y <= 530)
             {
                 numPlayers = 3;
                 choice = "gMode";
                 resetFortuneDeck();
+                System.out.println("Number of Players: " + numPlayers);
             }
             else if (x >= 839 && x <= 1331 && y >= 547 && y <= 912)
             {
                 numPlayers = 4;
                 choice = "gMode";
                 resetFortuneDeck();
+                System.out.println("Number of Players: " + numPlayers);
             }
         }
         else if(choice.equals("gMode"))
@@ -404,13 +603,71 @@ public class QuacksExtraPanel extends JPanel implements MouseListener, KeyListen
                     System.out.println("All fortune cards have been drawn!");
                 }
             }
-            // Start Brewing Button
+            // Start Brewing Button -> CURRENTLY LEADS TO BUY PHASE
             else if (activeDrawnCard != null && x >= 632 && x <= 879 && y >= 613 && y <= 688) 
             {
                 System.out.println("Start brewing clicked! Moving to brewing phase.");
-                choice = "bPhase24";
+                if(numPlayers <= 2)
+                {
+                	if(selectedSet == 4)
+                	{
+                		choice = m = "bPhase24";
+                		System.out.println("1-2 Players, Set4");
+                	}
+                	if(selectedSet == 3)
+                	{
+                		choice = m = "bPhase23";
+                		System.out.println("1-2 Players, Set3");
+                	}
+                	if(selectedSet == 2)
+                	{
+                		choice = m = "bPhase22";
+                		System.out.println("1-2 Players, Set2");
+                	}
+                	if(selectedSet == 1)
+                	{
+                		choice = m = "bPhase21";
+                		System.out.println("1-2 Players, Set1");
+                	}
+                }
+                else if(numPlayers > 2)
+                {
+                	if(selectedSet == 4)
+                	{
+                		choice = m = "bPhase34";
+                		System.out.println("3-4 Players, Set4");
+                	}
+                	if(selectedSet == 3)
+                	{
+                		choice = m = "bPhase33";
+                		System.out.println("3-4 Players, Set3");
+                	}
+                	if(selectedSet == 2)
+                	{
+                		choice = m = "bPhase32";
+                		System.out.println("3-4 Players, Set2");
+                	}
+                	if(selectedSet == 1)
+                	{
+                		choice = m = "bPhase31";
+                		System.out.println("3-4 Players, Set1");
+                	}
+                }
             }
         }
+        //BUYING PHASE
+        else if(choice.contains("bPhase") && x >=282+50 && y>= 838 && x<= 282+50+100 && y <= 838+50)
+        {
+        	if(cBuyer < 4)
+        	{
+        		cBuyer++;
+        	}
+        	else if(cBuyer == 4)
+        	{
+        		choice = "vBoard";
+        	}
+        }
+        
         //RULES PAGES NAVIGATION
         else if (choice.startsWith("rPg")) 
         {
