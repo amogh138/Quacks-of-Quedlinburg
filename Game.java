@@ -1,677 +1,299 @@
-import java.util.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 public class Game {
-    private final int MAX_ROUNDS;
-    private int playerCount;
-    private int humanCount;
-    private IngredientSet set;
-    private ArrayList<Player> players;
-    private ArrayList<Ingredient> shop;
-    private ArrayList<Card> cards;
-    private Board board;
-    private Card currentCard;
-    private Random rng;
-    private int round;
-    private int current;
-    private int diceResult;
-    private boolean choosing;
-    private boolean buying;
-    private boolean gameOver;
-    private boolean[] decided;
-    private List<String> messages;
-    private List<String> fortuneCardEffects;
-    private boolean rubySpaceUsed;
-
-    public Game(int playerCount, int humanCount, IngredientSet set) {
-        MAX_ROUNDS = 9;
-        this.playerCount = playerCount;
-        this.humanCount = humanCount;
-        this.set = set;
-        rng = new Random();
-        players = new ArrayList<>();
-        shop = new ArrayList<>();
-        cards = new ArrayList<>();
-        messages = new ArrayList<>();
-        fortuneCardEffects = new ArrayList<>();
-        decided = new boolean[playerCount];
-        int length = 54;
-        int[] coinTrack = new int[length];
-        int[] pointTrack = new int[length];
-        boolean[] rubySpaces = new boolean[length];
-        for (int i = 0; i < length; i++) {
-            coinTrack[i] = Math.max(1, i / 5);
-            pointTrack[i] = i / 2;
-            rubySpaces[i] = i > 0 && i % 5 == 0;
-        }
-        board = new Board(length, 300, coinTrack, pointTrack, rubySpaces);
+    public List<Player> players;
+    public Board board;
+    public List<Card> cards;
+    public Random rng;
+    public int currentRound;
+    public final int MAX_ROUNDS = 9;
+    public IngredientSet ingredientSet;
+    public int turn;
+    public int currentPlayerIndex;
+    public Player currentPlayer;
+    public List<Ingredient> boughtThisTurn;
+    public List<Ingredient> bonusChips;
+    public int bonusCount;
+    public boolean isActive;
+    public List<IngredientSet> ingredientBooks;
+    public int totalRubyCollected;
+    public int totalVPCollected;
+    public int totalChipsBought;
+    public int turnTracker;
+    
+    public Game(List<Player> players, Board board) {
+        this.players = players;
+        this.board = board;
+        this.cards = new ArrayList<>();
+        this.rng = new Random();
+        this.currentRound = 1;
+        this.ingredientSet = IngredientSet.getDefaultSet();
+        this.turn = 1;
+        this.currentPlayerIndex = 0;
+        this.currentPlayer = players.get(0);
+        this.boughtThisTurn = new ArrayList<>();
+        this.bonusChips = new ArrayList<>();
+        this.bonusCount = 0;
+        this.isActive = false;
+        this.ingredientBooks = new ArrayList<>();
+        this.totalRubyCollected = 0;
+        this.totalVPCollected = 0;
+        this.totalChipsBought = 0;
+        this.turnTracker = 1;
+        
         makeCards();
+        setupIngredientBooks();
     }
-
-    private void makeCards() {
+    
+    public void makeCards() {
         cards.clear();
-        fortuneCardEffects.clear();
         for (int i = 1; i <= 24; i++) {
-            boolean isPink = i <= 12;
-            cards.add(new Card(i, null, isPink));
+            cards.add(new Card(i, null, true));
         }
         Collections.shuffle(cards, rng);
     }
-
-    public void startGame() {
-        players.clear();
-        messages.clear();
-        shop.clear();
-        round = 1;
-        current = 0;
-        diceResult = 0;
-        choosing = false;
-        buying = false;
-        gameOver = false;
-        decided = new boolean[playerCount];
-        makeCards();
-        ArrayList<Ingredient> startingBag = new ArrayList<>(set.getStartBag());
-        for (int i = 0; i < playerCount; i++) {
-            AI ai = i < humanCount ? null : new AI(0.5);
-            Player p = new Player(
-                    i < humanCount ? "Player " + (i + 1)
-                            : "Computer " + (i - humanCount + 1),
-                    ai,
-                    new ArrayList<>(startingBag));
-            p.fillFlask();
-            players.add(p);
-        }
-        addMessage("The game has started.");
-        startRound();
-    }
-
-    private void startRound() {
-        if (round < 1 || round > MAX_ROUNDS) {
-            gameOver = true;
-            return;
-        }
-        choosing = false;
-        buying = false;
-        Arrays.fill(decided, false);
-        current = 0;
-        currentCard = cards.isEmpty() ? null : cards.remove(0);
-        shop.clear();
-        updateShop();
-
-        if (currentCard != null && currentCard.isFortuneCard()) {
-            currentCard.getEffect();
-            applyFortuneCardEffect(currentCard.getCardNum());
-        }
-
-        for (int i = 0; i < players.size(); i++) {
-            Player p = players.get(i);
-            p.getBag().addAll(p.getPot());
-            p.getPot().clear();
-            p.setPosition(p.getRatTails());
-            int bombTotal = p.getCherryBombTotal();
-            p.addCherryBombs(Math.max(0, -bombTotal));
-            p.setTakeCoins(false);
-            p.resume();
-        }
-        giveRatTails();
-        addMessage("Round " + round + " has started.");
-    }
-
-    private void giveRatTails() {
-        int highest = 0;
-        for (int i = 0; i < players.size(); i++) {
-            Player p = players.get(i);
-            highest = Math.max(highest, p.getPoints());
-        }
-        for (int i = 0; i < players.size(); i++) {
-            Player p = players.get(i);
-            int tails = Math.max(0, (highest - p.getPoints()) / 2);
-            p.setRatTails(tails);
-            p.setPosition(tails);
+    
+    public void setupIngredientBooks() {
+        for (int i = 1; i <= 5; i++) {
+            IngredientSet book = new IngredientSet("Book " + i, "Book " + i);
+            book.setNumber(i);
+            book.setRound(i);
+            book.setActive(false);
+            book.bonusChips = new ArrayList<>();
+            book.bonusCount = 0;
+            this.ingredientBooks.add(book);
         }
     }
-
-    public void drawAll() {
-        if (gameOver || choosing || buying) {
-            return;
+    
+    public List<Player> determineWinners() {
+        int maxPoints = -1;
+        List<Player> winners = new ArrayList<>();
+        for (Player p : players) {
+            if (p.getPoints() > maxPoints) {
+                maxPoints = p.getPoints();
+                winners.clear();
+                winners.add(p);
+            } else if (p.getPoints() == maxPoints) {
+                winners.add(p);
+            }
         }
-        for (int i = 0; i < players.size(); i++) {
-            Player p = players.get(i);
-            if (!p.isStopped()) {
-                if (p.isAI() && p.getAI().shouldStop(p)) {
-                    stopPlayer(i);
+        
+        if (winners.size() > 1 && currentRound <= MAX_ROUNDS) {
+            currentRound = 10;
+            playRound();
+            maxPoints = -1;
+            List<Player> finalWinners = new ArrayList<>();
+            for (Player p : players) {
+                if (p.getPoints() > maxPoints) {
+                    maxPoints = p.getPoints();
+                    finalWinners.clear();
+                    finalWinners.add(p);
+                } else if (p.getPoints() == maxPoints) {
+                    finalWinners.add(p);
+                }
+            }
+            return finalWinners;
+        }
+        return winners;
+    }
+    
+    public void playRound() {
+        if (!cards.isEmpty()) {
+            Card activeCard = cards.get(0);
+            activeCard.getEffect(this);
+            cards.remove(0);
+        }
+        
+        if (currentRound > 1) {
+            int ratDistance = calculateRatDistance();
+            for (int i = 1; i < players.size(); i++) {
+                players.get(i).addRatTails(ratDistance);
+            }
+        }
+        
+        for (Player p : players) {
+            p.startRound(p.getBag());
+            while (!p.isStopped() && !p.isExploded()) {
+                Ingredient ing = p.draw();
+                if (ing == null) break;
+                
+                if (ing.isCherryBomb()) {
+                    p.addCherryBombs(ing.getValue());
                 } else {
-                    drawChip(p);
+                    p.move(ing.getValue());
+                }
+                
+                if (p.getAI() != null && p.getAI().shouldStop(p)) {
+                    p.stop();
                 }
             }
         }
-        if (everyoneStopped()) {
-            endBrewing();
-        }
     }
-
-    private void drawChip(Player p) {
-        if (p == null || p.isStopped()) {
+    
+    public void playTurn() {
+        turn++;
+        if (turn > 9) {
+            determineWinners();
             return;
         }
-        if (p.getBag().isEmpty()) {
-            p.stop();
-            addMessage(p.getName() + " has no ingredients left.");
-            return;
-        }
-        Ingredient i = p.getBag().remove(rng.nextInt(p.getBag().size()));
-        p.getPot().add(i);
-        p.move(i.getValue());
-        if (i.isCherryBomb()) {
-            p.addCherryBombs(i.getValue());
-        }
-        doEffect(p, i);
-        addMessage(p.getName() + " drew " + i.getName() + ".");
-        if (p.isExploded()) {
-            p.stop();
-            addMessage(p.getName() + "'s pot exploded.");
-        } else if (p.isAI() && p.getAI().shouldStop(p)) {
-            p.stop();
-        } else if (p.getBag().isEmpty()) {
-            p.stop();
-        }
+        
+        currentPlayer = players.get(currentPlayerIndex);
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        
+        activateIngredientBooks();
+        playRound();
+        evaluateRound();
     }
-
-    private void doEffect(Player p, Ingredient i) {
-        String color = i.getColor() == null
-                ? "" : i.getColor().toLowerCase();
-        String effect = i.getEffect() == null
-                ? "" : i.getEffect().toLowerCase();
-        if (color.equals("orange") || color.equals("pumpkin")) {
-            if (effect.contains("coin")) {
-                p.addCoins(1);
-            }
-        } else if (color.equals("green") || color.equals("spider")) {
-            if (effect.contains("ruby")) {
-                p.addRubies(1);
-            }
-        } else if (color.equals("blue") || color.equals("crow")) {
-            if (effect.contains("bomb")) {
-                p.lowerBombs(1);
-            }
-        } else if (color.equals("red") || color.equals("toadstool")) {
-            if (effect.contains("move") || effect.contains("space")) {
-                p.move(1);
+    
+    private void activateIngredientBooks() {
+        for (IngredientSet book : ingredientBooks) {
+            if (book.getRound() == turn) {
+                book.setActive(true);
             }
         }
+        isActive = true;
     }
-
-    public void stopPlayer(int index) {
-        if (index < 0 || index >= players.size()
-                || choosing || buying || gameOver) {
-            return;
+    
+    private void evaluateRound() {
+        for (Player p : players) {
+            p.checkLastSpaceBonus(board);
         }
-        players.get(index).stop();
-        addMessage(players.get(index).getName() + " stopped brewing.");
-        if (everyoneStopped()) {
-            endBrewing();
-        }
-    }
-
-    public void useFlask(int index) {
-        if (index < 0 || index >= players.size()
-                || choosing || buying || gameOver) {
-            return;
-        }
-        flask(players.get(index));
-        if (everyoneStopped()) {
-            endBrewing();
-        }
-    }
-
-    private void flask(Player p) {
-        if (p == null || !p.isFlaskFilled()
-                || p.isStopped() || p.getPot().isEmpty()) {
-            return;
-        }
-        if (p.getRubies() < 2) {
-            return;
-        }
-        Ingredient last = p.getPot().get(p.getPot().size() - 1);
-        if (!last.isCherryBomb()) {
-            return;
-        }
-        p.getPot().remove(p.getPot().size() - 1);
-        p.getBag().add(last);
-        p.move(-last.getValue());
-        p.lowerBombs(last.getValue());
-        p.useFlask();
-        p.spendRubies(2);
-        p.resume();
-        addMessage(p.getName() + " used a flask.");
-    }
-
-    private boolean everyoneStopped() {
-        for (int i = 0; i < players.size(); i++) {
-            Player p = players.get(i);
-            if (!p.isStopped()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private void endBrewing() {
-        if (choosing || buying || gameOver) {
-            return;
-        }
-        choosing = true;
-        Arrays.fill(decided, false);
-        nextChoice();
-    }
-
-    private void nextChoice() {
-        for (int i = 0; i < players.size(); i++) {
-            Player p = players.get(i);
-            if (p.isExploded() && !decided[i]) {
-                current = i;
-                if (p.isAI()) {
-                    choose(p.getAI().takeCoins(p, board, round));
-                }
-                return;
-            }
-        }
-        choosing = false;
-        rollDice();
-        scoreAll();
-        buying = true;
-        Arrays.fill(decided, false);
-        current = 0;
-        nextBuyer();
-    }
-
-    public void choose(boolean takeCoins) {
-        if (!choosing || current < 0 || current >= players.size()) {
-            return;
-        }
-        Player p = players.get(current);
-        p.setTakeCoins(takeCoins);
-        decided[current] = true;
-        addMessage(p.getName() + (takeCoins ? " chose coins." : " chose points."));
-        nextChoice();
-    }
-
-    private void rollDice() {
-        diceResult = rng.nextInt(6) + 1;
-    }
-
-    private void scoreAll() {
-        for (int i = 0; i < players.size(); i++) {
-            Player p = players.get(i);
-            int position = Math.min(p.getPosition(), board.getLength() - 1);
-
-            if (p.isExploded()) {
-                if (p.isTakeCoins()) {
-                    p.addCoins(board.getCoins(position));
-                } else {
-                    p.addPoints(board.getPoints(position));
-                }
-            } else {
-                p.addCoins(board.getCoins(position));
-                p.addPoints(board.getPoints(position));
-            }
-
+        
+        for (Player p : players) {
+            int position = p.getPosition();
             if (board.hasRuby(position)) {
-                p.addRubies(1);
+                p.recordRubySpace();
+            }
+        }
+        
+        for (Player p : players) {
+            int roll = (int)(Math.random() * 6) + 1;
+            p.addPoints(roll);
+        }
+        
+        for (Player p : players) {
+            if (!p.isExploded()) {
+                p.collectRuby();
+            }
+        }
+        
+        for (Player p : players) {
+            Ingredient chip = buyChip(p);
+            if (chip != null) {
+                totalChipsBought++;
             }
         }
     }
-
-    private void updateShop() {
-        shop.clear();
-        for (int i = 0; i < set.getIngredients().size(); i++) {
-            Ingredient ingredient = set.getIngredients().get(i);
-            if (ingredient.getUnlockRound() <= round) {
-                shop.add(ingredient);
+    
+    private Ingredient buyChip(Player p) {
+        int coins = p.getCoins();
+        if (coins == 0) return null;
+        
+        int bestChipValue = 0;
+        for (int value = 4; value >= 1; value--) {
+            int cost = ingredientSet.getCost(value);
+            if (coins >= cost) {
+                bestChipValue = value;
+                break;
             }
         }
-    }
-
-    public boolean canBuy(Ingredient i) {
-        if (current < 0 || current >= players.size()) {
-            return false;
-        }
-        return canBuy(players.get(current), i);
-    }
-
-    private boolean canBuy(Player p, Ingredient i) {
-        return buying && p != null && i != null
-                && shop.contains(i) && p.getCoins() >= i.getCost();
-    }
-
-    public void buy(Ingredient i) {
-        if (current >= 0 && current < players.size()) {
-            buy(players.get(current), i);
-        }
-    }
-
-    private void buy(Player p, Ingredient i) {
-        if (!shop.contains(i)) {
-            return;
-        }
-        if (canBuy(p, i)) {
-            p.getBag().add(i);
-            p.setCoins(p.getCoins() - i.getCost());
-            p.getBoughtThisRound().add(i);
-            shop.remove(i);
-            addMessage(p.getName() + " bought " + i.getName() + ".");
-        }
-    }
-
-    public void buyDrop() {
-        if (!buying || current < 0 || current >= players.size()) {
-            return;
-        }
-        Player p = players.get(current);
-        if (p.getRubies() >= 2) {
-            p.spendRubies(2);
-            p.moveDrop(1);
-            p.setPosition(p.getPosition() + 1);
-            addMessage(p.getName() + " bought a drop.");
-        }
-    }
-
-    public void buyFlask() {
-        if (!buying || current < 0 || current >= players.size()) {
-            return;
-        }
-        Player p = players.get(current);
-        if (p.getRubies() >= 2 && !p.isFlaskFilled()) {
-            p.spendRubies(2);
-            p.fillFlask();
-            addMessage(p.getName() + " bought a flask.");
-        }
-    }
-
-    public void doneBuying() {
-        if (!buying || current < 0 || current >= players.size() || gameOver) {
-            return;
-        }
-        decided[current] = true;
-        addMessage(players.get(current).getName() + " is done buying.");
-        nextBuyer();
-    }
-
-    private void nextBuyer() {
-        if (!buying) {
-            return;
-        }
-        int checked = 0;
-        while (checked < players.size() && decided[current]) {
-            current = (current + 1) % players.size();
-            checked++;
-        }
-        if (checked == players.size()) {
-            endRound();
-            return;
-        }
-        Player p = players.get(current);
-        if (p.isAI()) {
-            aiBuy(p);
-            decided[current] = true;
-            nextBuyer();
-        }
-    }
-
-    private void aiBuy(Player p) {
-        if (p.getAI().takeCoins(p, board, round)) {
-            p.setTakeCoins(true);
-            addMessage(p.getName() + " took coins.");
-            return;
-        }
-        Ingredient i = p.getAI().chooseBuy(p, shop);
-        if (i != null && canBuy(p, i)) {
-            buy(p, i);
-        } else if (p.getAI().wantFlask(p)
-                && p.getRubies() >= 2 && !p.isFlaskFilled()) {
-            p.spendRubies(2);
-            p.fillFlask();
-            addMessage(p.getName() + " bought a flask.");
-        } else if (p.getAI().wantDrop(p)
-                && p.getRubies() >= 2) {
-            p.spendRubies(2);
-            p.moveDrop(1);
-            p.setPosition(p.getPosition() + 1);
-            addMessage(p.getName() + " bought a drop.");
-        } else {
-            addMessage(p.getName() + " is done buying.");
-        }
-    }
-
-    private void endRound() {
-        for (int i = 0; i < players.size(); i++) {
-            Player p = players.get(i);
-            p.getBag().addAll(p.getPot());
-            p.getPot().clear();
-        }
-        if (round == MAX_ROUNDS) {
-            gameOver = true;
-            buying = false;
-            addMessage("Game over.");
-        } else {
-            round++;
-            startRound();
-        }
-    }
-
-    public Player winner() {
-        if (players.isEmpty()) {
-            return null;
-        }
-        Player winner = players.get(0);
-        for (int i = 0; i < players.size(); i++) {
-            Player p = players.get(i);
-            if (p.getPoints() > winner.getPoints()
-                    || (p.getPoints() == winner.getPoints() && p.getRubies() > winner.getRubies())
-                    || (p.getPoints() == winner.getPoints() && p.getRubies() == winner.getRubies()
-                        && p.getPot().size() > winner.getPot().size())) {
-                winner = p;
+        
+        if (bestChipValue == 0) return null;
+        
+        for (Ingredient i : ingredientSet.getIngredients()) {
+            if (i.getValue() == bestChipValue && p.getCoins() >= i.getCost()) {
+                p.spendCoins(i.getCost());
+                p.addToBag(i);
+                return i;
             }
         }
-        return winner;
+        
+        return null;
     }
-
-    public void addMessage(String text) {
-        messages.add(text);
+    
+    private int calculateRatDistance() {
+        return 1;
     }
-
+    
+    public void startGame() {
+        for (Player p : players) {
+            p.setCoins(0);
+            p.setPoints(0);
+        }
+        makeCards();
+        playTurn();
+    }
+    
+    public IngredientSet getIngredientSet() {
+        return ingredientSet;
+    }
+    
+    public int getTurn() {
+        return turn;
+    }
+    
     public Player getCurrentPlayer() {
-        return players.get(current);
+        return currentPlayer;
     }
-
-    public List<Player> getPlayers() {
-        return players;
+    
+    public boolean isActive() {
+        return isActive;
     }
-
-    public IngredientSet getSet() {
-        return set;
+    
+    public void setActive(boolean active) {
+        isActive = active;
     }
-
-    public List<Ingredient> getShop() {
-        return shop;
+    
+    public int getCurrentRound() {
+        return currentRound;
     }
-
-    public Board getBoard() {
-        return board;
+    
+    public int getMaxRounds() {
+        return MAX_ROUNDS;
     }
-
-    public Card getCurrentCard() {
-        return currentCard;
+    
+    public List<IngredientSet> getIngredientBooks() {
+        return ingredientBooks;
     }
-
-    public int getRound() {
-        return round;
+    
+    public List<Ingredient> getBoughtThisTurn() {
+        return boughtThisTurn;
     }
-
-    public int getCurrent() {
-        return current;
+    
+    public List<Ingredient> getBonusChips() {
+        return bonusChips;
     }
-
-    public int getDiceResult() {
-        return diceResult;
+    
+    public int getBonusCount() {
+        return bonusCount;
     }
-
-    public List<String> getMessages() {
-        return messages;
+    
+    public void incrementBonusCount() {
+        bonusCount++;
     }
-
-    public List<String> getFortuneCardEffects() {
-        return fortuneCardEffects;
+    
+    public void addBonusChip(Ingredient chip) {
+        bonusChips.add(chip);
+        bonusCount++;
     }
-
-    public boolean isBrewing() {
-        return !choosing && !buying && !gameOver;
+    
+    public int getTotalRubyCollected() {
+        return totalRubyCollected;
     }
-
-    public boolean isChoosing() {
-        return choosing;
+    
+    public int getTotalVPCollected() {
+        return totalVPCollected;
     }
-
-    public boolean isBuying() {
-        return buying;
+    
+    public int getTotalChipsBought() {
+        return totalChipsBought;
     }
-
-    public boolean isGameOver() {
-        return gameOver;
-    }
-
-    private void applyFortuneCardEffect(int cardNum) {
-        switch (cardNum) {
-            case 1:
-                for (Player p : players) {
-                    for (Ingredient i : p.getPot()) {
-                        if (i.getColor().equals("blue") || i.getColor().equals("crow")) {
-                            i.setValue(i.getValue() + 2);
-                        }
-                    }
-                }
-                break;
-            case 2:
-                for (Ingredient i : set.getIngredients()) {
-                    if (i.getColor().equals("orange") || i.getColor().equals("pumpkin")) {
-                        i.setCost(Math.max(0, i.getCost() - 1));
-                    }
-                }
-                break;
-            case 3:
-                for (Player p : players) {
-                    for (Ingredient i : p.getPot()) {
-                        if (i.getColor().equals("green") || i.getColor().equals("spider")) {
-                            for (Ingredient j : p.getPot()) {
-                                if (j.getColor().equals("white")) {
-                                    j.setValue(j.getValue() + 1);
-                                }
-                            }
-                        }
-                    }
-                }
-                break;
-            case 4:
-                for (Player p : players) {
-                    for (Ingredient i : p.getPot()) {
-                        if (i.getColor().equals("purple") || i.getColor().equals("ghost")) {
-                            for (Ingredient j : p.getPot()) {
-                                if (j.getColor().equals("yellow") || j.getColor().equals("mandrake")) {
-                                    j.setValue(j.getValue() + 1);
-                                }
-                            }
-                        }
-                    }
-                }
-                break;
-            case 5:
-                for (Ingredient i : set.getIngredients()) {
-                    if (i.getColor().equals("blue") || i.getColor().equals("crow")) {
-                        i.setCost(Math.max(0, i.getCost() - 1));
-                    }
-                }
-                break;
-            case 6:
-                for (Player p : players) {
-                    for (Ingredient i : p.getPot()) {
-                        if (i.getColor().equals("orange") || i.getColor().equals("pumpkin")) {
-                            for (Ingredient j : p.getPot()) {
-                                if (j.getColor().equals("red") || j.getColor().equals("toadstool")) {
-                                    j.setValue(j.getValue() + 1);
-                                }
-                            }
-                        }
-                    }
-                }
-                break;
-            case 7:
-                for (Player p : players) {
-                    for (Ingredient i : p.getPot()) {
-                        if (i.getColor().equals("white")) {
-                            for (Ingredient j : p.getPot()) {
-                                if (j.getColor().equals("purple") || j.getColor().equals("ghost")) {
-                                    j.setValue(j.getValue() + 1);
-                                }
-                            }
-                        }
-                    }
-                }
-                break;
-            case 8:
-                for (Player p : players) {
-                    for (Ingredient i : p.getPot()) {
-                        if (i.getColor().equals("purple") || i.getColor().equals("ghost")) {
-                            for (Ingredient j : p.getPot()) {
-                                if (j.getColor().equals("blue") || j.getColor().equals("crow")) {
-                                    j.setValue(j.getValue() + 1);
-                                }
-                            }
-                        }
-                    }
-                }
-                break;
-            case 9:
-                for (Ingredient i : set.getIngredients()) {
-                    if (i.getColor().equals("yellow") || i.getColor().equals("mandrake")) {
-                        i.setCost(Math.max(0, i.getCost() - 1));
-                    }
-                }
-                break;
-            case 10:
-                for (Player p : players) {
-                    for (Ingredient i : p.getPot()) {
-                        if (i.getColor().equals("red") || i.getColor().equals("toadstool")) {
-                            for (Ingredient j : p.getPot()) {
-                                if (j.getColor().equals("green") || j.getColor().equals("spider")) {
-                                    j.setValue(j.getValue() + 1);
-                                }
-                            }
-                        }
-                    }
-                }
-                break;
-            case 11:
-                for (Ingredient i : set.getIngredients()) {
-                    if (i.getColor().equals("red") || i.getColor().equals("toadstool")) {
-                        i.setCost(Math.max(0, i.getCost() - 1));
-                    }
-                }
-                break;
-            case 12:
-                for (Player p : players) {
-                    for (Ingredient i : p.getPot()) {
-                        if (i.getColor().equals("white")) {
-                            for (Ingredient j : p.getPot()) {
-                                if (j.getColor().equals("orange") || j.getColor().equals("pumpkin")) {
-                                    j.setValue(j.getValue() + 1);
-                                }
-                            }
-                        }
-                    }
-                }
-                break;
-            default:
-                break;
-        }
+    
+    public int getTurnTracker() {
+        return turnTracker;
     }
 }

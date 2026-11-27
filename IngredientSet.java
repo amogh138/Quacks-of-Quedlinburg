@@ -1,235 +1,169 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class IngredientSet {
-    private String name;
-    private String description;
-    private List<Ingredient> ingredients;
-    private List<Ingredient> startBag;
-
+    public String name;
+    public String description;
+    public List<Ingredient> ingredients;
+    public List<Ingredient> startBag;
+    public int setNumber;
+    public int round;
+    public Map<String, Ingredient> ingredientMap;
+    public List<Ingredient> boughtThisTurn;
+    public boolean isActive;
+    public List<Ingredient> bonusChips;
+    public int bonusCount;
+    public int cost1;
+    public int cost2;
+    public int cost4;
+    public String bonusEffect;
+    
     public IngredientSet(String name, String description) {
         this.name = name;
         this.description = description;
         this.ingredients = new ArrayList<>();
         this.startBag = new ArrayList<>();
+        this.setNumber = 1;
+        this.round = 1;
+        this.ingredientMap = new HashMap<>();
+        this.boughtThisTurn = new ArrayList<>();
+        this.isActive = false;
+        this.bonusChips = new ArrayList<>();
+        this.bonusCount = 0;
+        this.cost1 = 0;
+        this.cost2 = 0;
+        this.cost4 = 0;
+        this.bonusEffect = "";
     }
-
-    public void addIngredient(Ingredient i) {
+    
+    public void addIngredient(Ingredient i) { 
         ingredients.add(i);
+        ingredientMap.put(i.name, i);
     }
-
-    public void addStartChip(Ingredient i) {
+    
+    public void addStartChip(Ingredient i) { 
         startBag.add(i);
     }
-
-    public String getName() { return name; }
-    public String getDescription() { return description; }
-    public List<Ingredient> getIngredients() { return ingredients; }
-    public List<Ingredient> getStartBag() { return startBag; }
-
-    public void setName(String name) { this.name = name; }
-    public void setDescription(String description) { this.description = description; }
-    public void setIngredients(List<Ingredient> ingredients) { this.ingredients = ingredients; }
-    public void setStartBag(List<Ingredient> startBag) { this.startBag = startBag; }
-
-    public void removeIngredient(Ingredient i) {
-        ingredients.remove(i);
+    
+    public void setActive(boolean active) { 
+        isActive = active;
     }
-
-    public void removeStartChip(Ingredient i) {
-        startBag.remove(i);
+    
+    public void setNumber(int setNumber) {
+        this.setNumber = setNumber;
     }
-
-    public void clearIngredients() {
-        ingredients.clear();
+    
+    public int getRound() {
+        return round;
     }
-
-    public void clearStartBag() {
-        startBag.clear();
+    
+    public void buy(Ingredient ingredient, Player player) {
+        if (ingredient != null && player.getCoins() >= ingredient.getCost()) {
+            player.spendCoins(ingredient.getCost());
+            player.addToBag(ingredient);
+            boughtThisTurn.add(ingredient);
+        }
     }
-
-    public boolean containsIngredient(Ingredient i) {
-        return ingredients.contains(i);
+    
+    public int getCost(int value) {
+        if (value == 1) return cost1;
+        if (value == 2) return cost2;
+        if (value == 4) return cost4;
+        return 0;
     }
-
-    public boolean containsStartChip(Ingredient i) {
-        return startBag.contains(i);
+    
+    public Ingredient getIngredient(String name) {
+        return ingredientMap.get(name);
     }
-
-    public int getIngredientCount() {
-        return ingredients.size();
+    
+    public List<Ingredient> getIngredients() {
+        return ingredients;
     }
-
-    public int getStartChipCount() {
-        return startBag.size();
+    
+    public List<Ingredient> getStartBag() {
+        return startBag;
     }
-
-    public Ingredient getIngredient(int index) {
-        return ingredients.get(index);
+    
+    public int getCosts() {
+        int total = 0;
+        for (Ingredient i : ingredients) {
+            total += i.getCost();
+        }
+        return total;
     }
-
-    public Ingredient getStartChip(int index) {
-        return startBag.get(index);
+    
+    public void setCosts(int c1, int c2, int c4, String bonus) {
+        cost1 = c1;
+        cost2 = c2;
+        cost4 = c4;
+        bonusEffect = bonus;
     }
-
-    public void setIngredient(int index, Ingredient i) {
-        ingredients.set(index, i);
+    
+    public void incrementSetNumber() {
+        setNumber++;
     }
-
-    public void setStartChip(int index, Ingredient i) {
-        startBag.set(index, i);
+    
+    public void setRound(int round) {
+        this.round = round;
     }
-
-    public void addIngredient(int index, Ingredient i) {
-        ingredients.add(index, i);
-    }
-
-    public void addStartChip(int index, Ingredient i) {
-        startBag.add(index, i);
-    }
-
-    public String toString() {
-        return "The set is " + name;
-    }
-
+    
     public static IngredientSet getDefaultSet() {
-        IngredientSet set = new IngredientSet("Default Set", "Official default ingredient set");
-
+        IngredientSet set = new IngredientSet("Base Game Set", "Official base game ingredient set");
+        
         set.addIngredient(new Ingredient("Blue 1-chip", "blue", 1, 5, 1, "Bomb reduction", null));
         set.addIngredient(new Ingredient("Blue 2-chip", "blue", 2, 10, 1, "Bomb reduction", null));
         set.addIngredient(new Ingredient("Blue 4-chip", "blue", 4, 19, 1, "Bomb reduction", null));
-
+        
         set.addIngredient(new Ingredient("Red 1-chip", "red", 1, 6, 1, "Movement bonus", null));
         set.addIngredient(new Ingredient("Red 2-chip", "red", 2, 10, 1, "Movement bonus", null));
         set.addIngredient(new Ingredient("Red 4-chip", "red", 4, 16, 1, "Movement bonus", null));
-
+        
         set.addIngredient(new Ingredient("Yellow 1-chip", "yellow", 1, 8, 1, "Bomb threshold", null));
         set.addIngredient(new Ingredient("Yellow 2-chip", "yellow", 2, 12, 1, "Bomb threshold", null));
         set.addIngredient(new Ingredient("Yellow 4-chip", "yellow", 4, 18, 1, "Bomb threshold", null));
-
+        
         set.addIngredient(new Ingredient("Green 1-chip", "green", 1, 4, 1, "Ruby bonus", null));
         set.addIngredient(new Ingredient("Green 2-chip", "green", 2, 8, 1, "Ruby bonus", null));
         set.addIngredient(new Ingredient("Green 4-chip", "green", 4, 14, 1, "Ruby bonus", null));
-
+        
         set.addIngredient(new Ingredient("Purple 1-chip", "purple", 1, 9, 1, "Victory points", null));
         set.addIngredient(new Ingredient("Purple 2-chip", "purple", 2, 12, 1, "Victory points", null));
-
-        for (int i = 0; i < 3; i++) {
+        
+        set.addIngredient(new Ingredient("Orange 1-chip", "orange", 1, 6, 1, "Points/Coins", null));
+        set.addIngredient(new Ingredient("Orange 2-chip", "orange", 2, 10, 1, "Points/Coins", null));
+        set.addIngredient(new Ingredient("Orange 4-chip", "orange", 4, 16, 1, "Points/Coins", null));
+        
+        for (int i = 0; i < 4; i++) {
             set.addStartChip(new Ingredient("White 1-chip", "white", 1, 0, 1, "Cherry bomb", null));
         }
-
+        set.addStartChip(new Ingredient("White 2-chip", "white", 2, 0, 1, "Cherry bomb", null));
+        set.addStartChip(new Ingredient("White 3-chip", "white", 3, 0, 1, "Cherry bomb", null));
+        set.addStartChip(new Ingredient("Orange 1-chip", "orange", 1, 0, 1, "Pumpkin", null));
+        set.addStartChip(new Ingredient("Green 1-chip", "green", 1, 0, 1, "Garden Spider", null));
+        
+        set.setCosts(1, 2, 4, "");
         return set;
     }
-
-    public static IngredientSet getSet1() {
-        IngredientSet set = new IngredientSet("Set 1", "Standard game rules");
-
-        set.addIngredient(new Ingredient("Blue 1-chip", "blue", 1, 5, 1, "Draw from bag", null));
-        set.addIngredient(new Ingredient("Blue 2-chip", "blue", 2, 10, 1, "Draw 2 chips", null));
-        set.addIngredient(new Ingredient("Blue 4-chip", "blue", 4, 19, 1, "Draw 4 chips", null));
-
-        set.addIngredient(new Ingredient("Red 1-chip", "red", 1, 6, 1, "Move based on value", null));
-        set.addIngredient(new Ingredient("Red 2-chip", "red", 2, 10, 1, "Move based on value", null));
-        set.addIngredient(new Ingredient("Red 4-chip", "red", 4, 16, 1, "Move based on value", null));
-
-        set.addIngredient(new Ingredient("Yellow 1-chip", "yellow", 1, 8, 1, "White chip removal", null));
-        set.addIngredient(new Ingredient("Yellow 2-chip", "yellow", 2, 12, 1, "White chip removal", null));
-        set.addIngredient(new Ingredient("Yellow 4-chip", "yellow", 4, 18, 1, "White chip removal", null));
-
-        set.addIngredient(new Ingredient("Green 1-chip", "green", 1, 4, 1, "Ruby bonus", null));
-        set.addIngredient(new Ingredient("Green 2-chip", "green", 2, 8, 1, "Ruby bonus", null));
-        set.addIngredient(new Ingredient("Green 4-chip", "green", 4, 14, 1, "Ruby bonus", null));
-
-        set.addIngredient(new Ingredient("Purple 1-chip", "purple", 1, 9, 1, "1 VP if 1 chip", null));
-        set.addIngredient(new Ingredient("Purple 2-chip", "purple", 2, 12, 1, "1 VP + 1 ruby if 2 chips", null));
-
-        for (int i = 0; i < 3; i++) {
-            set.addStartChip(new Ingredient("White 1-chip", "white", 1, 0, 1, "Cherry bomb", null));
+    
+    public void applyBonusEffect(Player player) {
+        if (bonusEffect.equals("Bomb reduction")) {
+            for (Ingredient i : player.getBag()) {
+                if (i.isBlue()) {
+                    if (i.getValue() == 1 && player.getCherryBombTotal() < 10) {
+                        player.lowerBombs(1);
+                    }
+                }
+            }
+        } else if (bonusEffect.equals("Movement bonus")) {
+            player.applyMovementBonus();
+        } else if (bonusEffect.equals("Bomb threshold")) {
+            player.LIMIT = 9;
+        } else if (bonusEffect.equals("Ruby bonus")) {
+            player.collectRuby();
+        } else if (bonusEffect.equals("Victory points")) {
+            player.addPoints(1);
         }
-
-        return set;
-    }
-
-    public static IngredientSet getSet2() {
-        IngredientSet set = new IngredientSet("Set 2", "Intermediate difficulty");
-
-        set.addIngredient(new Ingredient("Blue 1-chip", "blue", 1, 5, 1, "Extended bomb protection", null));
-        set.addIngredient(new Ingredient("Blue 2-chip", "blue", 2, 10, 1, "Extended bomb protection", null));
-        set.addIngredient(new Ingredient("Blue 4-chip", "blue", 4, 14, 1, "Extended bomb protection", null));
-
-        set.addIngredient(new Ingredient("Red 1-chip", "red", 1, 4, 1, "Special placement", null));
-        set.addIngredient(new Ingredient("Red 2-chip", "red", 2, 8, 1, "Special placement", null));
-        set.addIngredient(new Ingredient("Red 4-chip", "red", 4, 14, 1, "Special placement", null));
-
-        set.addIngredient(new Ingredient("Yellow 1-chip", "yellow", 1, 9, 1, "Double movement", null));
-        set.addIngredient(new Ingredient("Yellow 2-chip", "yellow", 2, 13, 1, "Double movement", null));
-        set.addIngredient(new Ingredient("Yellow 4-chip", "yellow", 4, 19, 1, "Double movement", null));
-
-        set.addIngredient(new Ingredient("Green 1-chip", "green", 1, 6, 1, "Get chip bonus", null));
-        set.addIngredient(new Ingredient("Green 2-chip", "green", 2, 11, 1, "Get chip bonus", null));
-        set.addIngredient(new Ingredient("Green 4-chip", "green", 4, 18, 1, "Get chip bonus", null));
-
-        set.addIngredient(new Ingredient("Purple 1-chip", "purple", 1, 12, 1, "Chip exchange", null));
-
-        for (int i = 0; i < 3; i++) {
-            set.addStartChip(new Ingredient("White 1-chip", "white", 1, 0, 1, "Cherry bomb", null));
-        }
-
-        return set;
-    }
-
-    public static IngredientSet getSet3() {
-        IngredientSet set = new IngredientSet("Set 3", "Advanced strategies");
-
-        set.addIngredient(new Ingredient("Blue 1-chip", "blue", 1, 4, 1, "Ruby on ruby space", null));
-        set.addIngredient(new Ingredient("Blue 2-chip", "blue", 2, 8, 1, "Ruby on ruby space", null));
-        set.addIngredient(new Ingredient("Blue 4-chip", "blue", 4, 14, 1, "Ruby on ruby space", null));
-
-        set.addIngredient(new Ingredient("Red 1-chip", "red", 1, 5, 1, "White chip value addition", null));
-        set.addIngredient(new Ingredient("Red 2-chip", "red", 2, 9, 1, "White chip value addition", null));
-        set.addIngredient(new Ingredient("Red 4-chip", "red", 4, 15, 1, "White chip value addition", null));
-
-        set.addIngredient(new Ingredient("Yellow 1-chip", "yellow", 1, 8, 1, "Progressive movement", null));
-        set.addIngredient(new Ingredient("Yellow 2-chip", "yellow", 2, 12, 1, "Progressive movement", null));
-        set.addIngredient(new Ingredient("Yellow 4-chip", "yellow", 4, 18, 1, "Progressive movement", null));
-
-        set.addIngredient(new Ingredient("Green 1-chip", "green", 1, 6, 1, "White chip check", null));
-        set.addIngredient(new Ingredient("Green 2-chip", "green", 2, 11, 1, "White chip check", null));
-        set.addIngredient(new Ingredient("Green 4-chip", "green", 4, 18, 1, "White chip check", null));
-
-        set.addIngredient(new Ingredient("Purple 1-chip", "purple", 1, 10, 1, "Position-based VP", null));
-
-        for (int i = 0; i < 3; i++) {
-            set.addStartChip(new Ingredient("White 1-chip", "white", 1, 0, 1, "Cherry bomb", null));
-        }
-
-        return set;
-    }
-
-    public static IngredientSet getSet4() {
-        IngredientSet set = new IngredientSet("Set 4", "Expert level");
-
-        set.addIngredient(new Ingredient("Blue 1-chip", "blue", 1, 5, 1, "VP on ruby space", null));
-        set.addIngredient(new Ingredient("Blue 2-chip", "blue", 2, 10, 1, "2 VP on ruby space", null));
-        set.addIngredient(new Ingredient("Blue 4-chip", "blue", 4, 20, 1, "4 VP on ruby space", null));
-
-        set.addIngredient(new Ingredient("Red 1-chip", "red", 1, 7, 1, "White chip movement", null));
-        set.addIngredient(new Ingredient("Red 2-chip", "red", 2, 11, 1, "White chip movement", null));
-        set.addIngredient(new Ingredient("Red 4-chip", "red", 4, 17, 1, "White chip movement", null));
-
-        set.addIngredient(new Ingredient("Yellow 1-chip", "yellow", 1, 8, 1, "1 extra space", null));
-        set.addIngredient(new Ingredient("Yellow 2-chip", "yellow", 2, 12, 1, "2 extra spaces", null));
-        set.addIngredient(new Ingredient("Yellow 4-chip", "yellow", 4, 18, 1, "3 extra spaces", null));
-
-        set.addIngredient(new Ingredient("Green 1-chip", "green", 1, 4, 1, "Ruby for movement", null));
-        set.addIngredient(new Ingredient("Green 2-chip", "green", 2, 8, 1, "Ruby for movement", null));
-        set.addIngredient(new Ingredient("Green 4-chip", "green", 4, 14, 1, "Ruby for movement", null));
-
-        set.addIngredient(new Ingredient("Purple 1-chip", "purple", 1, 11, 1, "Chip exchange", null));
-
-        for (int i = 0; i < 3; i++) {
-            set.addStartChip(new Ingredient("White 1-chip", "white", 1, 0, 1, "Cherry bomb", null));
-        }
-
-        return set;
     }
 }
